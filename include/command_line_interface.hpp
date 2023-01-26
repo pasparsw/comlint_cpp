@@ -33,8 +33,14 @@
 #include <map>
 
 #include "interface_validator.hpp"
+#include "command_properties.hpp"
+#include "parsed_command.hpp"
+#include "command_line_element_type.hpp"
 
 namespace cli {
+
+using Commands = std::map<CommandName, CommandProperties>;
+using Options = std::map<OptionName, OptionValues>;
 
 class CommandLineInterface
 {
@@ -83,11 +89,22 @@ public:
      * @description: Usage help for the flag.
      */
     void AddFlag(const FlagName &flag_name, const std::string &description);
+    /**
+     * @brief: Method parses command line input in context of the declared interface elements (commands, options and flags).
+     * @return: Structure containing parsed command and its properties.
+     */
+    ParsedCommand Parse() const;
 
 private:
-    bool IsCommandAlreadyAdded(const CommandName &command_name) const;
-    bool IsOptionAlreadyAdded(const OptionName &option_name) const;
-    bool IsFlagAlreadyAdded(const FlagName &flag_name) const;
+    bool IsCommandAdded(const CommandName &command_name) const;
+    bool IsOptionAdded(const OptionName &option_name) const;
+    bool IsFlagAdded(const FlagName &flag_name) const;
+    CommandLineElementType GetCommandLineElementType(const std::string &input) const;
+    CommandValues ParseCommand(const CommandName &command_name, const unsigned int command_index) const;
+    std::pair<OptionName, OptionValue> ParseOption(const CommandName &command_name, const OptionName &option_name,
+                                                   const unsigned int option_index) const;
+    FlagName ParseFlag(const CommandName &command_name, const FlagName &flag_name, const unsigned int flag_index) const;
+    void PrintHelp() const;
 
     const int argc_;
     char** argv_;

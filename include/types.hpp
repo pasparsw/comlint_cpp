@@ -12,7 +12,11 @@ using FlagName = std::string;
 using OptionNames = std::vector<OptionName>;
 using FlagNames = std::vector<FlagName>;
 
-using CommandValues = std::vector<std::string>;
-using OptionValues = std::vector<std::string>;
+using CommandValue = std::string;
+using CommandValues = std::vector<CommandValue>;
+using OptionValue = std::string;
+using OptionValues = std::vector<OptionValue>;
+using OptionsMap = std::map<OptionName, OptionValue>;
+using FlagsMap = std::map<FlagName, bool>;
 
 } // cli

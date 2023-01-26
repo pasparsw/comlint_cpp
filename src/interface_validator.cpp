@@ -2,24 +2,26 @@
 #include <iostream>
 namespace cli {
 
-static const std::string kOptionPrefix {"-"};
+static const char kOptionPrefix {'-'};
 static const std::string kFlagPrefix {"--"};
+static const unsigned int kMinCommandNameLength {1U};
+static const unsigned int kMinOptionNameLength {2U};
+static const unsigned int kMinFlagNameLength {3U};
 
 bool InterfaceValidator::IsCommandNameValid(const CommandName &command_name)
 {
-    return !command_name.empty() && std::string(1U, command_name.at(0U)) != kOptionPrefix && 
-           (command_name.size() > 1U ? command_name.substr(0U, 2U) != kFlagPrefix : true);
+    return command_name.size() >= kMinCommandNameLength && command_name.at(0U) != kOptionPrefix;
 }
 
 bool InterfaceValidator::IsOptionNameValid(const OptionName &option_name)
 {
-    return !option_name.empty() && option_name.size() > 1U && std::string(1U, option_name.at(0U)) == kOptionPrefix &&
+    return option_name.size() >= kMinOptionNameLength && option_name.at(0U) == kOptionPrefix &&
            option_name.substr(0U, 2U) != kFlagPrefix;
 }
 
 bool InterfaceValidator::IsFlagNameValid(const FlagName &flag_name)
 {
-    return !flag_name.empty() && flag_name.size() > 2U && flag_name.substr(0U, 2U) == kFlagPrefix;
+    return flag_name.size() >= kMinFlagNameLength && flag_name.substr(0U, 2U) == kFlagPrefix;
 }
 
 } // cli

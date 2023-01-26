@@ -3,12 +3,8 @@
 #include <map>
 
 #include "types.hpp"
-#include "command_properties.hpp"
 
 namespace cli {
-
-using Commands = std::map<CommandName, CommandProperties>;
-using Options = std::map<OptionName, OptionValues>;
 
 class InterfaceValidator
 {
