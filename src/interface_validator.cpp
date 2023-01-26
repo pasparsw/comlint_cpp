@@ -1,5 +1,5 @@
 #include "interface_validator.hpp"
-
+#include <iostream>
 namespace cli {
 
 static const std::string kOptionPrefix {"-"};
@@ -13,7 +13,8 @@ bool InterfaceValidator::IsCommandNameValid(const CommandName &command_name)
 
 bool InterfaceValidator::IsOptionNameValid(const OptionName &option_name)
 {
-    return !option_name.empty() && option_name.size() > 1U && std::string(1U, option_name.at(0U)) == kOptionPrefix;
+    return !option_name.empty() && option_name.size() > 1U && std::string(1U, option_name.at(0U)) == kOptionPrefix &&
+           option_name.substr(0U, 2U) != kFlagPrefix;
 }
 
 bool InterfaceValidator::IsFlagNameValid(const FlagName &flag_name)
