@@ -37,7 +37,7 @@
 #include "parsed_command.hpp"
 #include "command_line_element_type.hpp"
 
-namespace cli {
+namespace comlint {
 
 using Commands = std::map<CommandName, CommandProperties>;
 using Options = std::map<OptionName, OptionValues>;
@@ -58,7 +58,7 @@ public:
      * @required_options: Optional argument to specify a list of options which must be used together with the command. By default (empty list)
      *                    no options are required.
      */
-    void AddCommand(const CommandName &command_name, std::string &description, const OptionNames &allowed_options = {},
+    void AddCommand(const CommandName &command_name, const std::string &description, const OptionNames &allowed_options = {},
                     const FlagNames &allowed_flags = {}, const OptionNames &required_options = {});
     /**
      * @brief Method allowing user to add a command which takes a value.
@@ -73,7 +73,7 @@ public:
      * @required_options: Optional argument to specify a list of options which must be used together with the command. By default (empty list)
      *                    no options are required.
      */
-    void AddCommand(const CommandName &command_name, std::string &description, const CommandValues &allowed_values,
+    void AddCommand(const CommandName &command_name, const std::string &description, const CommandValues &allowed_values,
                     const unsigned int num_of_required_values, const OptionNames &allowed_options = {}, const FlagNames &allowed_flags = {},
                     const OptionNames &required_options = {});
     /**
@@ -99,14 +99,15 @@ private:
     bool IsCommandAdded(const CommandName &command_name) const;
     bool IsOptionAdded(const OptionName &option_name) const;
     bool IsFlagAdded(const FlagName &flag_name) const;
-    CommandLineElementType GetCommandLineElementType(const std::string &input) const;
+    CommandLineElementType GetCommandLineElementType(const std::string &input, const unsigned int element_position_index) const;
     CommandValues ParseCommand(const CommandName &command_name, const unsigned int command_index) const;
     std::pair<OptionName, OptionValue> ParseOption(const CommandName &command_name, const OptionName &option_name,
                                                    const unsigned int option_index) const;
     FlagName ParseFlag(const CommandName &command_name, const FlagName &flag_name, const unsigned int flag_index) const;
     void PrintHelp() const;
+    std::string VectorToString(const std::vector<std::string> &vector) const;
 
-    const int argc_;
+    const unsigned int argc_;
     char** argv_;
     std::string program_name_;
     std::string description_;
@@ -115,4 +116,4 @@ private:
     FlagNames interface_flags_;
 };
 
-} // cli
+} // comlint

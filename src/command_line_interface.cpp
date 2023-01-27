@@ -1,16 +1,19 @@
 #include <iostream>
 #include <algorithm>
+#include <iomanip>
+#include <numeric>
 
 #include "command_line_interface.hpp"
 
-namespace cli {
+namespace comlint {
 
 static const std::string kHelpCommandName {"help"};
 static const std::string kHelpOptionName {"-h"};
 static const std::string kHelpFlagName {"--help"};
+static const unsigned int kHelpElementHolderWidth {25U};
 
 CommandLineInterface::CommandLineInterface(const int argc, char** argv, const std::string &program_name, const std::string &description)
-: argc_{argc},
+: argc_{static_cast<unsigned int>(argc)},
   argv_{argv},
   program_name_{program_name.empty() ? argv[0] : program_name},
   description_{description},
@@ -19,13 +22,13 @@ CommandLineInterface::CommandLineInterface(const int argc, char** argv, const st
   interface_flags_{}
 {}
 
-void CommandLineInterface::AddCommand(const std::string &command_name, std::string &description, const OptionNames &allowed_options,
+void CommandLineInterface::AddCommand(const std::string &command_name, const std::string &description, const OptionNames &allowed_options,
                                       const FlagNames &allowed_flags, const OptionNames &required_options)
 {
     AddCommand(command_name, description, {}, 0U, allowed_options, allowed_flags, required_options);
 }
 
-void CommandLineInterface::AddCommand(const std::string &command_name, std::string &description, const CommandValues &allowed_values,
+void CommandLineInterface::AddCommand(const std::string &command_name, const std::string &description, const CommandValues &allowed_values,
                                       const unsigned int num_of_required_values, const OptionNames &allowed_options, const FlagNames &allowed_flags,
                                       const OptionNames &required_options)
 {
@@ -68,7 +71,7 @@ void CommandLineInterface::AddFlag(const FlagName &flag_name, const std::string 
 
 ParsedCommand CommandLineInterface::Parse() const
 {
-    if (argc_ == 0 || argv_[1U] == kHelpCommandName || argv_[1U] == kHelpOptionName || argv_[1U] == kHelpFlagName) {
+    if (argc_ == 0U || argv_[1U] == kHelpCommandName || argv_[1U] == kHelpOptionName || argv_[1U] == kHelpFlagName) {
         PrintHelp();
         return ParsedCommand();
     }
@@ -78,9 +81,9 @@ ParsedCommand CommandLineInterface::Parse() const
     OptionsMap options {};
     FlagsMap flags {};
 
-    for (unsigned int i=0U; i<argc_; i++) {
+    for (unsigned int i=1U; i<argc_; i++) {
         const std::string element = argv_[i];
-        const CommandLineElementType element_type = GetCommandLineElementType(element);
+        const CommandLineElementType element_type = GetCommandLineElementType(element, i);
 
         if (element_type == CommandLineElementType::kCommand) {
             command_name = element;
@@ -114,9 +117,9 @@ bool CommandLineInterface::IsFlagAdded(const FlagName &flag_name) const
     return std::find(interface_flags_.begin(), interface_flags_.end(), flag_name) != interface_flags_.end();
 }
 
-CommandLineElementType CommandLineInterface::GetCommandLineElementType(const std::string &input) const
+CommandLineElementType CommandLineInterface::GetCommandLineElementType(const std::string &input, const unsigned int element_position_index) const
 {
-    if (InterfaceValidator::IsCommandNameValid(input)) {
+    if (InterfaceValidator::IsCommandNameValid(input) && argv_[element_position_index - 1U] == program_name_) {
         return CommandLineElementType::kCommand;
     }
     if (InterfaceValidator::IsOptionNameValid(input)) {
@@ -126,7 +129,7 @@ CommandLineElementType CommandLineInterface::GetCommandLineElementType(const std
         return CommandLineElementType::kFlag;
     }
 
-    throw std::runtime_error("Unknown command line element type: " + input + "!");
+    return CommandLineElementType::kCustomValue;
 }
 
 CommandValues CommandLineInterface::ParseCommand(const CommandName &command_name, const unsigned int command_index) const
@@ -144,7 +147,7 @@ CommandValues CommandLineInterface::ParseCommand(const CommandName &command_name
     if (num_of_required_values == 0U) {
         return {};
     }
-    else if (command_index + num_of_required_values + 1U >= argc_) {
+    else if (command_index + num_of_required_values >= argc_) {
         throw std::runtime_error("Command " + command_name + " requires " + std::to_string(num_of_required_values) +
                                  " values, but they were not provided!");
     }
@@ -205,11 +208,37 @@ FlagName CommandLineInterface::ParseFlag(const CommandName &command_name, const 
 void CommandLineInterface::PrintHelp() const
 {
     std::cout << "Usage of " << program_name_ << std::endl;
-    std::cout << description_ << std::endl;
+    std::cout << description_ << std::endl << std::endl;
 
     for (const auto &[command_name, command_properties] : interface_commands_) {
+        std::cout << std::setw(kHelpElementHolderWidth) << std::left << command_name << ":" << command_properties.description << std::endl;
 
+        if (!command_properties.allowed_values.empty()) {
+            std::cout << std::setw(kHelpElementHolderWidth) << std::left << "allowed values: " << VectorToString(command_properties.allowed_values) << std::endl;
+        }
+        if (!command_properties.allowed_options.empty()) {
+            std::cout << std::setw(kHelpElementHolderWidth) << std::left << "allowed options: " << VectorToString(command_properties.allowed_options) << std::endl;
+        }
+        if (!command_properties.allowed_flags.empty()) {
+            std::cout << std::setw(kHelpElementHolderWidth) << std::left << "allowed flags: " << VectorToString(command_properties.allowed_flags) << std::endl;
+        }
+        if (!command_properties.required_options.empty()) {
+            std::cout << std::setw(kHelpElementHolderWidth) << std::left << "required options: " << VectorToString(command_properties.required_options) << std::endl;
+        }
+
+        std::cout << std::endl << std::endl;
     }
+
+    std::cout << std::endl;
 }
 
+std::string CommandLineInterface::VectorToString(const std::vector<std::string> &vector) const
+{
+    const std::string text = std::accumulate(vector.begin(), vector.end(), std::string(), [](const std::string &a, const std::string &b){
+        return a + (a.size() > 0U ? ", " : "") + b;
+    });
+
+    return "[" + text + "]";
 }
+
+} // comlint

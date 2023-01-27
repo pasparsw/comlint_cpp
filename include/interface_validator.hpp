@@ -4,7 +4,7 @@
 
 #include "types.hpp"
 
-namespace cli {
+namespace comlint {
 
 class InterfaceValidator
 {
@@ -14,4 +14,4 @@ public:
     static bool IsFlagNameValid(const FlagName &flag_name);
 };
 
-} // cli
+} // comlint

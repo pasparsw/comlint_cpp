@@ -1,6 +1,6 @@
 #include "interface_validator.hpp"
-#include <iostream>
-namespace cli {
+
+namespace comlint {
 
 static const char kOptionPrefix {'-'};
 static const std::string kFlagPrefix {"--"};
@@ -24,4 +24,4 @@ bool InterfaceValidator::IsFlagNameValid(const FlagName &flag_name)
     return flag_name.size() >= kMinFlagNameLength && flag_name.substr(0U, 2U) == kFlagPrefix;
 }
 
-} // cli
+} // comlint

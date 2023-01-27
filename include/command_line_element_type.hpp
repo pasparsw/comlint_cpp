@@ -1,13 +1,13 @@
 #pragma once
 
-namespace cli {
+namespace comlint {
 
 enum class CommandLineElementType
 {
     kCommand,
     kOption,
     kFlag,
-    kInvalid
+    kCustomValue
 };
 
-}
+} // comlint

@@ -20,7 +20,9 @@ set(PUBLIC_HEADERS
     ${CMAKE_SOURCE_DIR}/include/command_line_interface.hpp
     ${CMAKE_SOURCE_DIR}/include/interface_validator.hpp
     ${CMAKE_SOURCE_DIR}/include/command_properties.hpp
+    ${CMAKE_SOURCE_DIR}/include/parsed_command.hpp
     ${CMAKE_SOURCE_DIR}/include/types.hpp
+    ${CMAKE_SOURCE_DIR}/include/utils.hpp
 )
 
 add_library(${PROJECT_NAME} SHARED)
@@ -32,15 +34,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_sources(${PROJECT_NAME} PRIVATE
     ${SOURCE_DIRS}/command_line_interface.cpp
     ${SOURCE_DIRS}/interface_validator.cpp
+    ${SOURCE_DIRS}/parsed_command.cpp
+    ${SOURCE_DIRS}/utils.cpp
 )
 
 enable_testing()
 
 add_subdirectory(libs/googletest)
 add_subdirectory(test)
-
-install(TARGETS ${PROJECT_NAME}
-        RUNTIME DESTINATION bin
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib)
-install(FILES ${PUBLIC_HEADERS} DESTINATION include)

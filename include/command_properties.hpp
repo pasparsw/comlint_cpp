@@ -5,7 +5,7 @@
 
 #include "types.hpp"
 
-namespace cli {
+namespace comlint {
 
 /**
  * @brief Structure representing all properties of a single command.
@@ -32,4 +32,4 @@ struct CommandProperties
     OptionNames required_options;
 };
 
-}
+} // comlint

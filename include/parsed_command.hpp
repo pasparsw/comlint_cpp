@@ -4,25 +4,15 @@
 
 #include "types.hpp"
 
-namespace cli {
+namespace comlint {
 
 struct ParsedCommand
 {
-    ParsedCommand()
-    : name{},
-      values{},
-      options{},
-      flags{}
-    {}
-    ParsedCommand(const CommandName &name, const CommandValues &values, const OptionsMap &options, const FlagsMap &flags)
-    : name{name},
-      values{values},
-      options{options},
-      flags{flags}
-    {}
+    ParsedCommand();
+    ParsedCommand(const CommandName &name, const CommandValues &values, const OptionsMap &options, const FlagsMap &flags);
 
-    bool IsOptionUsed(const OptionName &option_name) const { return options.find(option_name) != options.end(); }
-    bool IsFlagUsed(const FlagName &flag_name) const { return flags.find(flag_name) != flags.end(); }
+    bool IsOptionUsed(const OptionName &option_name) const;
+    bool IsFlagUsed(const FlagName &flag_name) const;
 
     CommandName name;
     CommandValues values;
@@ -30,4 +20,6 @@ struct ParsedCommand
     FlagsMap flags;
 };
 
-} // cli
+bool operator==(const ParsedCommand &lhs, const ParsedCommand &rhs);
+
+} // comlint

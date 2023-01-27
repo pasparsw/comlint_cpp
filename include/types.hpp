@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace cli {
+namespace comlint {
 
 using CommandName = std::string;
 using OptionName = std::string;
@@ -19,4 +19,4 @@ using OptionValues = std::vector<OptionValue>;
 using OptionsMap = std::map<OptionName, OptionValue>;
 using FlagsMap = std::map<FlagName, bool>;
 
-} // cli
+} // comlint
