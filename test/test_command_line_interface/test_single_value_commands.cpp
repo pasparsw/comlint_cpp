@@ -38,6 +38,53 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandAceptingPredefinedValue
     EXPECT_EQ(parsed_command, expected_parsed_command);
 }
 
+TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithOneAllowedOption)
+{
+    const int argc = 3;
+    char* argv[] = {"program.exe", "open", "/some/file.txt"};
+
+    const CommandName expected_command_name {"open"};
+    const CommandValues expected_command_values {"/some/file.txt"};
+    const OptionsMap expected_options {};
+    const FlagsMap expected_flags {};
+    const ParsedCommand expected_parsed_command(expected_command_name, expected_command_values, expected_options, expected_flags);
+
+    CommandLineInterface cli(argc, argv);
+    const CommandValues allowed_values {};
+    const unsigned int num_of_req_command_values {1U};
+    const OptionNames allowed_options {"-allowed_option"};
+
+    cli.AddCommand("open", "Command to open file", {}, num_of_req_command_values, allowed_options);
+
+    const ParsedCommand parsed_command = cli.Parse();
+
+    EXPECT_EQ(parsed_command, expected_parsed_command);
+}
+
+TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithCoupleAllowedOptionsAndFlags)
+{
+    const int argc = 3;
+    char* argv[] = {"program.exe", "open", "/some/file.txt"};
+
+    const CommandName expected_command_name {"open"};
+    const CommandValues expected_command_values {"/some/file.txt"};
+    const OptionsMap expected_options {};
+    const FlagsMap expected_flags {};
+    const ParsedCommand expected_parsed_command(expected_command_name, expected_command_values, expected_options, expected_flags);
+
+    CommandLineInterface cli(argc, argv);
+    const CommandValues allowed_values {};
+    const unsigned int num_of_req_command_values {1U};
+    const OptionNames allowed_options {"-allowed_option"};
+    const FlagNames allowed_flags {"--allowed_flag"};
+
+    cli.AddCommand("open", "Command to open file", allowed_values, num_of_req_command_values, allowed_options, allowed_flags);
+
+    const ParsedCommand parsed_command = cli.Parse();
+
+    EXPECT_EQ(parsed_command, expected_parsed_command);
+}
+
 TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithOneRequiredOption)
 {
     const int argc = 5;

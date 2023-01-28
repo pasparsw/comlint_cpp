@@ -4,6 +4,16 @@
 #include <numeric>
 
 #include "command_line_interface.hpp"
+#include "exceptions/unsupported_command.hpp"
+#include "exceptions/invalid_command_position.hpp"
+#include "exceptions/missing_command_value.hpp"
+#include "exceptions/unsupported_command_value.hpp"
+#include "exceptions/unsupported_option.hpp"
+#include "exceptions/missing_option_value.hpp"
+#include "exceptions/forbidden_option_value.hpp"
+#include "exceptions/forbidden_option.hpp"
+#include "exceptions/unsupported_flag.hpp"
+#include "exceptions/forbidden_flag.hpp"
 
 namespace comlint {
 
@@ -136,18 +146,18 @@ CommandValues CommandLineInterface::ParseCommand(const CommandName &command_name
 {
 
     if (!IsCommandAdded(command_name)) {
-        throw std::runtime_error("Command " + command_name + " is not supported!");
+        throw UnsupportedCommand("Command " + command_name + " is not supported!");
     }
     if (command_index != 1U) {
-        throw std::runtime_error("Detected command " + command_name + " is not directly after program name!");
+        throw InvalidCommandPosition("Detected command " + command_name + " is not directly after program name!");
     }
 
     if (!interface_commands_.at(command_name).RequiresValue()) {
         return {};
     }
     else if (command_index + interface_commands_.at(command_name).num_of_required_values >= argc_) {
-        throw std::runtime_error("Command " + command_name + " requires " + std::to_string(interface_commands_.at(command_name).num_of_required_values) +
-                                 " values, but they were not provided!");
+        throw MissingCommandValue("Command " + command_name + " requires " + std::to_string(interface_commands_.at(command_name).num_of_required_values) +
+                                  " value(s), but they were not provided!");
     }
 
     CommandValues values {};
@@ -157,7 +167,7 @@ CommandValues CommandLineInterface::ParseCommand(const CommandName &command_name
 
         if (!interface_commands_.at(command_name).allowed_values.empty() &&
             std::find(interface_commands_.at(command_name).allowed_values.begin(), interface_commands_.at(command_name).allowed_values.end(), command_value) == interface_commands_.at(command_name).allowed_values.end()) {
-            throw std::runtime_error("Unsupported value " + command_value + " for " + command_name + " command!");
+            throw UnsupportedCommandValue("Unsupported value " + command_value + " for " + command_name + " command!");
         }
 
         values.push_back(argv_[command_index + i + 1U]);
@@ -170,21 +180,21 @@ std::pair<OptionName, OptionValue> CommandLineInterface::ParseOption(const Comma
                                                                      const unsigned int option_index) const
 {
     if (!IsOptionAdded(option_name)) {
-        throw std::runtime_error("Option " + option_name + " is not supported!");
+        throw UnsupportedOption("Option " + option_name + " is not supported!");
     }
     if (option_index + 1U >= argc_) {
-        throw std::runtime_error("Option " + option_name + " requires value, but no value has been provided!");
+        throw MissingOptionValue("Option " + option_name + " requires value, but no value has been provided!");
     }
     if (!interface_commands_.at(command_name).allowed_options.empty() &&
         std::find(interface_commands_.at(command_name).allowed_options.begin(), interface_commands_.at(command_name).allowed_options.end(), option_name) == interface_commands_.at(command_name).allowed_options.end()) {
-        throw std::runtime_error("Option " + option_name + " is not allowed for " + command_name + " command!");
+        throw ForbiddenOption("Option " + option_name + " is not allowed for " + command_name + " command!");
     }
 
     const OptionValue value = argv_[option_index + 1U];
 
     if (!interface_options_.at(option_name).empty() &&
         std::find(interface_options_.at(option_name).begin(), interface_options_.at(option_name).end(), value) == interface_options_.at(option_name).end()) {
-        throw std::runtime_error("Given value " + value + " for option " + option_name + " is not supported!");
+        throw ForbiddenOptionValue("Given value " + value + " for option " + option_name + " is not allowed!");
     }
 
     return std::make_pair(option_name, value);
@@ -193,11 +203,11 @@ std::pair<OptionName, OptionValue> CommandLineInterface::ParseOption(const Comma
 FlagName CommandLineInterface::ParseFlag(const CommandName &command_name, const FlagName &flag_name, const unsigned int flag_index) const
 {
     if (!IsFlagAdded(flag_name)) {
-        throw std::runtime_error("Flag " + flag_name + " is not supported!");
+        throw UnsupportedFlag("Flag " + flag_name + " is not supported!");
     }
     if (!interface_commands_.at(command_name).allowed_flags.empty() &&
         std::find(interface_commands_.at(command_name).allowed_flags.begin(), interface_commands_.at(command_name).allowed_flags.end(), flag_name) == interface_commands_.at(command_name).allowed_flags.end()) {
-        throw std::runtime_error("Flag " + flag_name + " is not allowed for " + command_name + " command!");
+        throw ForbiddenFlag("Flag " + flag_name + " is not allowed for " + command_name + " command!");
     }
 
     return argv_[flag_index];
