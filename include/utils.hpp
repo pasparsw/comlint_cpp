@@ -23,5 +23,17 @@ bool AreMapsEqual(const MapType &lhs, const MapType &rhs)
     return true;
 }
 
+template <typename MapType>
+bool MapContainsKey(const MapType &map, const typename MapType::key_type &key)
+{
+    return map.find(key) != map.end();
+}
+
+template <typename VectorType>
+bool VectorContainsElement(const VectorType &vector, const typename VectorType::value_type &element)
+{
+    return std::find(vector.begin(), vector.end(), element) != vector.end();
+}
+
 } // utils
 } // comlint

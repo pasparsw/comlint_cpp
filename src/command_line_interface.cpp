@@ -1,7 +1,4 @@
 #include <iostream>
-#include <algorithm>
-#include <iomanip>
-#include <numeric>
 
 #include "command_line_interface.hpp"
 #include "exceptions/unsupported_command.hpp"
@@ -14,13 +11,9 @@
 #include "exceptions/forbidden_option.hpp"
 #include "exceptions/unsupported_flag.hpp"
 #include "exceptions/forbidden_flag.hpp"
+#include "utils.hpp"
 
 namespace comlint {
-
-static const std::string kHelpCommandName {"help"};
-static const std::string kHelpOptionName {"-h"};
-static const std::string kHelpFlagName {"--help"};
-static const unsigned int kHelpElementHolderWidth {25U};
 
 CommandLineInterface::CommandLineInterface(const int argc, char** argv, const std::string &program_name, const std::string &description)
 : argc_{static_cast<unsigned int>(argc)},
@@ -46,7 +39,7 @@ void CommandLineInterface::AddCommand(const std::string &command_name, const std
         std::cerr << "Unable to add command " << command_name << " - command name invalid" << std::endl;
         return;
     }
-    if (IsCommandAdded(command_name)) {
+    if (utils::MapContainsKey(interface_commands_, command_name)) {
         std::cerr << "Unable to add command " << command_name << " - command with the same name already added" << std::endl;
         return;
     }
@@ -60,11 +53,11 @@ void CommandLineInterface::AddOption(const OptionName &option_name, const std::s
     if (!InterfaceValidator::IsOptionNameValid(option_name)) {
         std::cerr << "Unable to add option " << option_name << " - option name invalid" << std::endl;
     }
-    if (IsOptionAdded(option_name)) {
+    if (utils::MapContainsKey(interface_options_, option_name)) {
         std::cerr << "Unable to add option " << option_name << " - option with the same name already added" << std::endl;
     }
 
-    interface_options_.insert({option_name, allowed_values});
+    interface_options_.insert({option_name, OptionProperties(description, allowed_values, "")});
 }
 
 void CommandLineInterface::AddFlag(const FlagName &flag_name, const std::string &description)
@@ -72,17 +65,17 @@ void CommandLineInterface::AddFlag(const FlagName &flag_name, const std::string 
     if (!InterfaceValidator::IsFlagNameValid(flag_name)) {
         std::cerr << "Unable to add flag " << flag_name << " - flag name invalid" << std::endl;
     }
-    if (IsFlagAdded(flag_name)) {
+    if (utils::MapContainsKey(interface_flags_, flag_name)) {
         std::cerr << "Unable to add flag " << flag_name << " - flag with the same name already added" << std::endl;
     }
 
-    interface_flags_.push_back(flag_name);
+    interface_flags_.insert({flag_name, FlagProperties(description)});
 }
 
 ParsedCommand CommandLineInterface::Parse() const
 {
-    if (argc_ == 0U || argv_[1U] == kHelpCommandName || argv_[1U] == kHelpOptionName || argv_[1U] == kHelpFlagName) {
-        PrintHelp();
+    if (InterfaceHelper::IsHelpRequired(argc_, argv_)) {
+        std::cout << InterfaceHelper::GetHelp(program_name_, description_, interface_commands_, interface_options_, interface_flags_);
         return ParsedCommand();
     }
 
@@ -112,21 +105,6 @@ ParsedCommand CommandLineInterface::Parse() const
     return ParsedCommand(command_name, command_values, options, flags);
 }
 
-bool CommandLineInterface::IsCommandAdded(const CommandName &command_name) const
-{
-    return interface_commands_.find(command_name) != interface_commands_.end();
-}
-
-bool CommandLineInterface::IsOptionAdded(const OptionName &option_name) const
-{
-    return interface_options_.find(option_name) != interface_options_.end();
-}
-
-bool CommandLineInterface::IsFlagAdded(const FlagName &flag_name) const
-{
-    return std::find(interface_flags_.begin(), interface_flags_.end(), flag_name) != interface_flags_.end();
-}
-
 CommandLineElementType CommandLineInterface::GetCommandLineElementType(const std::string &input, const unsigned int element_position_index) const
 {
     if (InterfaceValidator::IsCommandNameValid(input) && argv_[element_position_index - 1U] == program_name_) {
@@ -144,8 +122,7 @@ CommandLineElementType CommandLineInterface::GetCommandLineElementType(const std
 
 CommandValues CommandLineInterface::ParseCommand(const CommandName &command_name, const unsigned int command_index) const
 {
-
-    if (!IsCommandAdded(command_name)) {
+    if (!utils::MapContainsKey(interface_commands_, command_name)) {
         throw UnsupportedCommand("Command " + command_name + " is not supported!");
     }
     if (command_index != 1U) {
@@ -166,7 +143,7 @@ CommandValues CommandLineInterface::ParseCommand(const CommandName &command_name
         const CommandValue command_value = argv_[command_index + i + 1U];
 
         if (!interface_commands_.at(command_name).allowed_values.empty() &&
-            std::find(interface_commands_.at(command_name).allowed_values.begin(), interface_commands_.at(command_name).allowed_values.end(), command_value) == interface_commands_.at(command_name).allowed_values.end()) {
+            !utils::VectorContainsElement<CommandValues>(interface_commands_.at(command_name).allowed_values, command_value)) {
             throw UnsupportedCommandValue("Unsupported value " + command_value + " for " + command_name + " command!");
         }
 
@@ -179,21 +156,21 @@ CommandValues CommandLineInterface::ParseCommand(const CommandName &command_name
 std::pair<OptionName, OptionValue> CommandLineInterface::ParseOption(const CommandName &command_name, const OptionName &option_name,
                                                                      const unsigned int option_index) const
 {
-    if (!IsOptionAdded(option_name)) {
+    if (!utils::MapContainsKey(interface_options_, option_name)) {
         throw UnsupportedOption("Option " + option_name + " is not supported!");
     }
     if (option_index + 1U >= argc_) {
         throw MissingOptionValue("Option " + option_name + " requires value, but no value has been provided!");
     }
     if (!interface_commands_.at(command_name).allowed_options.empty() &&
-        std::find(interface_commands_.at(command_name).allowed_options.begin(), interface_commands_.at(command_name).allowed_options.end(), option_name) == interface_commands_.at(command_name).allowed_options.end()) {
+        !utils::VectorContainsElement<CommandValues>(interface_commands_.at(command_name).allowed_options, option_name)) {
         throw ForbiddenOption("Option " + option_name + " is not allowed for " + command_name + " command!");
     }
 
     const OptionValue value = argv_[option_index + 1U];
 
-    if (!interface_options_.at(option_name).empty() &&
-        std::find(interface_options_.at(option_name).begin(), interface_options_.at(option_name).end(), value) == interface_options_.at(option_name).end()) {
+    if (!interface_options_.at(option_name).allowed_values.empty() &&
+        !utils::VectorContainsElement<CommandValues>(interface_options_.at(option_name).allowed_values, value)) {
         throw ForbiddenOptionValue("Given value " + value + " for option " + option_name + " is not allowed!");
     }
 
@@ -202,51 +179,15 @@ std::pair<OptionName, OptionValue> CommandLineInterface::ParseOption(const Comma
 
 FlagName CommandLineInterface::ParseFlag(const CommandName &command_name, const FlagName &flag_name, const unsigned int flag_index) const
 {
-    if (!IsFlagAdded(flag_name)) {
+    if (!utils::MapContainsKey(interface_flags_, flag_name)) {
         throw UnsupportedFlag("Flag " + flag_name + " is not supported!");
     }
     if (!interface_commands_.at(command_name).allowed_flags.empty() &&
-        std::find(interface_commands_.at(command_name).allowed_flags.begin(), interface_commands_.at(command_name).allowed_flags.end(), flag_name) == interface_commands_.at(command_name).allowed_flags.end()) {
+        !utils::VectorContainsElement<CommandValues>(interface_commands_.at(command_name).allowed_flags, flag_name)) {
         throw ForbiddenFlag("Flag " + flag_name + " is not allowed for " + command_name + " command!");
     }
 
     return argv_[flag_index];
-}
-
-void CommandLineInterface::PrintHelp() const
-{
-    std::cout << "Usage of " << program_name_ << std::endl;
-    std::cout << description_ << std::endl << std::endl;
-
-    for (const auto &[command_name, command_properties] : interface_commands_) {
-        std::cout << std::setw(kHelpElementHolderWidth) << std::left << command_name << ":" << command_properties.description << std::endl;
-
-        if (!command_properties.allowed_values.empty()) {
-            std::cout << std::setw(kHelpElementHolderWidth) << std::left << "allowed values: " << VectorToString(command_properties.allowed_values) << std::endl;
-        }
-        if (!command_properties.allowed_options.empty()) {
-            std::cout << std::setw(kHelpElementHolderWidth) << std::left << "allowed options: " << VectorToString(command_properties.allowed_options) << std::endl;
-        }
-        if (!command_properties.allowed_flags.empty()) {
-            std::cout << std::setw(kHelpElementHolderWidth) << std::left << "allowed flags: " << VectorToString(command_properties.allowed_flags) << std::endl;
-        }
-        if (!command_properties.required_options.empty()) {
-            std::cout << std::setw(kHelpElementHolderWidth) << std::left << "required options: " << VectorToString(command_properties.required_options) << std::endl;
-        }
-
-        std::cout << std::endl << std::endl;
-    }
-
-    std::cout << std::endl;
-}
-
-std::string CommandLineInterface::VectorToString(const std::vector<std::string> &vector) const
-{
-    const std::string text = std::accumulate(vector.begin(), vector.end(), std::string(), [](const std::string &a, const std::string &b){
-        return a + (a.size() > 0U ? ", " : "") + b;
-    });
-
-    return "[" + text + "]";
 }
 
 } // comlint

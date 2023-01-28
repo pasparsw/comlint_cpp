@@ -85,3 +85,41 @@ TEST(TestUtils, AreMapsEqualReturnsFalseForDifferentMaps)
     
     EXPECT_FALSE(utils::AreMapsEqual<MapType>(lhs_map, rhs_map));
 }
+
+TEST(TestUtils, MapContainsKeyReturnsTrue)
+{
+    using MapType = std::map<std::string, std::string>;
+
+    const MapType map {{"key_1", "value_1"},
+                       {"key_2", "value_2"}};
+
+    EXPECT_TRUE(utils::MapContainsKey<MapType>(map, "key_2"));
+}
+
+TEST(TestUtils, MapContainsKeyReturnsFalse)
+{
+    using MapType = std::map<std::string, std::string>;
+
+    const MapType map {{"key_1", "value_1"},
+                       {"key_2", "value_2"}};
+
+    EXPECT_FALSE(utils::MapContainsKey<MapType>(map, "key_3"));
+}
+
+TEST(TestUtils, VectorContainsElementReturnsTrue)
+{
+    using VectorType = std::vector<std::string>;
+
+    const VectorType vector {"element_1", "element_2"};
+
+    EXPECT_TRUE(utils::VectorContainsElement<VectorType>(vector, "element_2"));
+}
+
+TEST(TestUtils, VectorContainsElementReturnsFalse)
+{
+    using VectorType = std::vector<std::string>;
+
+    const VectorType vector {"element_1", "element_2"};
+
+    EXPECT_FALSE(utils::VectorContainsElement<VectorType>(vector, "element_3"));
+}

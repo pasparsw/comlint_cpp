@@ -33,14 +33,11 @@
 #include <map>
 
 #include "interface_validator.hpp"
-#include "command_properties.hpp"
 #include "parsed_command.hpp"
 #include "command_line_element_type.hpp"
+#include "interface_helper.hpp"
 
 namespace comlint {
-
-using Commands = std::map<CommandName, CommandProperties>;
-using Options = std::map<OptionName, OptionValues>;
 
 class CommandLineInterface
 {
@@ -96,16 +93,11 @@ public:
     ParsedCommand Parse() const;
 
 private:
-    bool IsCommandAdded(const CommandName &command_name) const;
-    bool IsOptionAdded(const OptionName &option_name) const;
-    bool IsFlagAdded(const FlagName &flag_name) const;
     CommandLineElementType GetCommandLineElementType(const std::string &input, const unsigned int element_position_index) const;
     CommandValues ParseCommand(const CommandName &command_name, const unsigned int command_index) const;
     std::pair<OptionName, OptionValue> ParseOption(const CommandName &command_name, const OptionName &option_name,
                                                    const unsigned int option_index) const;
     FlagName ParseFlag(const CommandName &command_name, const FlagName &flag_name, const unsigned int flag_index) const;
-    void PrintHelp() const;
-    std::string VectorToString(const std::vector<std::string> &vector) const;
 
     const unsigned int argc_;
     char** argv_;
@@ -113,7 +105,7 @@ private:
     std::string description_;
     Commands interface_commands_;
     Options interface_options_;
-    FlagNames interface_flags_;
+    Flags interface_flags_;
 };
 
 } // comlint
