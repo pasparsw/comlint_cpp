@@ -7,6 +7,9 @@ target_include_directories(${TARGET} PRIVATE
 )
 
 target_sources(${TARGET} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_command_properties.cpp
+    ${CMAKE_SOURCE_DIR}/src/parsed_command.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_parsed_command.cpp
     ${CMAKE_SOURCE_DIR}/src/interface_validator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_interface_validator.cpp
     ${CMAKE_SOURCE_DIR}/src/parsed_command.cpp

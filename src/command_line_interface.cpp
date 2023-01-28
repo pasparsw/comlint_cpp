@@ -142,19 +142,17 @@ CommandValues CommandLineInterface::ParseCommand(const CommandName &command_name
         throw std::runtime_error("Detected command " + command_name + " is not directly after program name!");
     }
 
-    const unsigned int num_of_required_values = interface_commands_.at(command_name).num_of_required_values;
-
-    if (num_of_required_values == 0U) {
+    if (!interface_commands_.at(command_name).RequiresValue()) {
         return {};
     }
-    else if (command_index + num_of_required_values >= argc_) {
-        throw std::runtime_error("Command " + command_name + " requires " + std::to_string(num_of_required_values) +
+    else if (command_index + interface_commands_.at(command_name).num_of_required_values >= argc_) {
+        throw std::runtime_error("Command " + command_name + " requires " + std::to_string(interface_commands_.at(command_name).num_of_required_values) +
                                  " values, but they were not provided!");
     }
 
     CommandValues values {};
 
-    for (unsigned int i=0U; i<num_of_required_values; i++) {
+    for (unsigned int i=0U; i<interface_commands_.at(command_name).num_of_required_values; i++) {
         const CommandValue command_value = argv_[command_index + i + 1U];
 
         if (!interface_commands_.at(command_name).allowed_values.empty() &&
