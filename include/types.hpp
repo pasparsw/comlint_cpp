@@ -20,5 +20,6 @@ using OptionsMap = std::map<OptionName, OptionValue>;
 using FlagsMap = std::map<FlagName, bool>;
 
 static const std::vector<std::string> ANY {};
+static const std::vector<std::string> NONE {};
 
 } // comlint

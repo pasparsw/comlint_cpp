@@ -43,6 +43,15 @@ namespace comlint {
 class PUBLIC_COMLINT_API CommandLineInterface
 {
 public:
+    /**
+     * @brief Constructor.
+     * @argc: argc from main function.
+     * @argv: argv from main function.
+     * @program_name: Program name which should be displayed in help prompt.
+     * @description: Program description which should be displayed in help prompt.
+     * @allow_no_arguments: Setting to true means that program may be ran without providing any command line arguments. Setting to false means that at least
+     *                      one command line argument must be provided (otherwise, the help prompt will be displayed).
+     */
     CommandLineInterface(const int argc, char** argv, const std::string &program_name = "", const std::string &description = "", const bool allow_no_arguments = true);
 
     /**
@@ -50,35 +59,35 @@ public:
      * @command_name: Name of the command.
      * @description: Usage help for the command.
      * @allowed_options: Optional argument to specify a list of all options which may be used together with the command. By default (empty list)
-     *                   all registered options are allowed.
-     * @allowed_flags: Optional argument to specify a list of flags which may be used together with the command. By default (empty list) all
-     *                 registered flags are allowed.
+     *                   no options are allowed.
+     * @allowed_flags: Optional argument to specify a list of flags which may be used together with the command. By default (empty list) no
+     *                 flags are allowed.
      * @required_options: Optional argument to specify a list of options which must be used together with the command. By default (empty list)
      *                    no options are required.
      */
-    void AddCommand(const CommandName &command_name, const std::string &description, const OptionNames &allowed_options = ANY,
-                    const FlagNames &allowed_flags = ANY, const OptionNames &required_options = {});
+    void AddCommand(const CommandName &command_name, const std::string &description, const OptionNames &allowed_options = NONE,
+                    const FlagNames &allowed_flags = NONE, const OptionNames &required_options = NONE);
     /**
      * @brief Method allowing user to add a command which takes a value.
      * @command_name: Name of the command.
      * @description: Usage help for the command.
-     * @allowed_values: List of allowed values which can be used with the command. Empty list means that all values are allowed.
      * @num_of_required_values: Number of required values for the command.
+     * @allowed_values: List of allowed values which can be used with the command. By default (empty list) all values are allowed.
      * @allowed_options: Optional argument to specify a list of all options which may be used together with the command. By default (empty list)
-     *                   all registered options are allowed.
-     * @allowed_flags: Optional argument to specify a list of flags which may be used together with the command. By default (empty list) all
-     *                 registered flags are allowed.
+     *                   no options are allowed.
+     * @allowed_flags: Optional argument to specify a list of flags which may be used together with the command. By default (empty list) no
+     *                 flags are allowed.
      * @required_options: Optional argument to specify a list of options which must be used together with the command. By default (empty list)
      *                    no options are required.
      */
     void AddCommand(const CommandName &command_name, const std::string &description, const unsigned int num_of_required_values,
-                    const CommandValues &allowed_values = ANY, const OptionNames &allowed_options = ANY, const FlagNames &allowed_flags = ANY,
-                    const OptionNames &required_options = {});
+                    const CommandValues &allowed_values = ANY, const OptionNames &allowed_options = NONE, const FlagNames &allowed_flags = NONE,
+                    const OptionNames &required_options = NONE);
     /**
      * @brief Method allowing user to add an option.
      * @option_name: Name of the option (must be prefixed with a single dash "-").
      * @description: Usage help for the option.
-     * @allowed_values: Optional argument to specify list of allowed values for the option.
+     * @allowed_values: Optional argument to specify list of allowed values for the option. By default (empty list) any values are allowed.
      */
     void AddOption(const OptionName &option_name, const std::string &description, const OptionValues &allowed_values = ANY);
     /**

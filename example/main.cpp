@@ -64,6 +64,7 @@ int main(int argc, char** argv)
     try {
         CommandLineInterface cli(argc, argv, "ExampleApplication", "Example usage of Comlint library basing on some git commands", false);
 
+        // add "add" command which requires 1 value (it )
         cli.AddCommand("add", "Add files to commit", 1U, ANY, ANY, {"--verbose", "--interactive"});
         cli.AddCommand("commit", "Commit changes", {"-m", "-c"}, {"--verbose", "--amend"});
         cli.AddCommand("merge", "Merge two branches", 2U, ANY, {"-s", "-m"}, {}, {"-s"});

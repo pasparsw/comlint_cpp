@@ -99,7 +99,7 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithOneRequiredOption)
     const CommandValues allowed_values = ANY;
     const unsigned int num_of_req_command_values {1U};
     const OptionNames allowed_options {"-required_option"};
-    const FlagNames allowed_flags = ANY;
+    const FlagNames allowed_flags = NONE;
     const OptionNames required_options {"-required_option"};
 
     cli.AddCommand("open", "Command to open file", num_of_req_command_values, allowed_values, allowed_options, allowed_flags, required_options);

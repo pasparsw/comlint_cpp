@@ -97,7 +97,7 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingRequiredOption)
     char* argv[] = {"program.exe", "supported_command", "-allowed_option", "some_value"};
     CommandLineInterface cli(argc, argv);
     const OptionNames allowed_options {"-allowed_option", "-required_option"};
-    const FlagNames allowed_flags = ANY;
+    const FlagNames allowed_flags = NONE;
     const OptionNames required_options {"-required_option"};
 
     cli.AddCommand("supported_command", "Some supported command", allowed_options, allowed_flags, required_options);
@@ -121,6 +121,22 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingOptionValue)
 }
 
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenOption)
+{
+    const int argc = 4;
+    char* argv[] = {"program.exe", "command_2", "-option_1", "option_value"};
+    CommandLineInterface cli(argc, argv);
+
+    const OptionNames command_1_allowed_options {"-option_1"};
+
+    cli.AddCommand("command_1", "Some command 1", command_1_allowed_options);
+    cli.AddCommand("command_2", "Some command 2");
+
+    cli.AddOption("-option_1", "Some option 1");
+
+    EXPECT_THROW(cli.Parse(), ForbiddenOption);
+}
+
+TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenOptionForSpecifiedAllowedOptions)
 {
     const int argc = 4;
     char* argv[] = {"program.exe", "command_1", "-option_2", "option_value"};
@@ -168,10 +184,22 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsUnsupportedFlag)
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenFlag)
 {
     const int argc = 3;
+    char* argv[] = {"program.exe", "command", "--flag_1"};
+    CommandLineInterface cli(argc, argv);
+
+    cli.AddCommand("command", "Some command");
+    cli.AddFlag("--flag_1", "Some flag 1");
+
+    EXPECT_THROW(cli.Parse(), ForbiddenFlag);
+}
+
+TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenFlagForSpecifiedAllowedFlags)
+{
+    const int argc = 3;
     char* argv[] = {"program.exe", "command", "--flag_2"};
     CommandLineInterface cli(argc, argv);
 
-    const OptionNames allowed_options = ANY;
+    const OptionNames allowed_options = NONE;
     const FlagNames allowed_flags {"--flag_1"};
 
     cli.AddCommand("command", "Some command", allowed_options, allowed_flags);
