@@ -37,6 +37,11 @@ std::string InterfaceHelper::GetHelp(const std::string &program_name, const std:
     return help.str();
 }
 
+std::string InterfaceHelper::GetHint(const std::string &similar_values)
+{
+    return similar_values.empty() ? "" : " Did you mean:\n" + similar_values;
+}
+
 std::string InterfaceHelper::GetHelpHeader(const std::string &program_name, const std::string &program_description)
 {
     std::stringstream header;

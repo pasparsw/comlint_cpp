@@ -144,7 +144,7 @@ CommandValues CommandLineInterface::ParseCommand(const CommandName &command_name
     if (!utils::MapContainsKey(interface_commands_, command_name)) {
         const std::string similar_commands = utils::GetSimilarKeys(interface_commands_, command_name, "\n");
 
-        throw UnsupportedCommand("Command " + command_name + " is not supported!" + (similar_commands.empty() ? "" : " Did you mean:\n" + similar_commands));
+        throw UnsupportedCommand("Command " + command_name + " is not supported!" + InterfaceHelper::GetHint(similar_commands));
     }
     if (command_index != 1U) {
         throw InvalidCommandPosition("Detected command " + command_name + " is not directly after program name!");
@@ -169,8 +169,7 @@ CommandValues CommandLineInterface::ParseCommand(const CommandName &command_name
             !utils::VectorContainsElement<CommandValues>(interface_commands_.at(command_name).allowed_values, command_value)) {
             const std::string similar_values = utils::GetSimilarValues(interface_commands_.at(command_name).allowed_values, command_value, "\n");
 
-            throw UnsupportedCommandValue("Unsupported value " + command_value + " for " + command_name + " command!" +
-                                          (similar_values.empty() ? "" : " Did you mean:\n" + similar_values));
+            throw UnsupportedCommandValue("Unsupported value " + command_value + " for " + command_name + " command!" + InterfaceHelper::GetHint(similar_values));
         }
 
         values.push_back(argv_[command_index + i + 1U]);
@@ -185,8 +184,7 @@ std::pair<OptionName, OptionValue> CommandLineInterface::ParseOption(const Comma
     if (!utils::MapContainsKey(interface_options_, option_name)) {
         const std::string similar_options = utils::GetSimilarKeys(interface_options_, option_name, "\n");
 
-        throw UnsupportedOption("Option " + option_name + " is not supported!" +
-                                (similar_options.empty() ? "" : " Did you mean:\n" + similar_options));
+        throw UnsupportedOption("Option " + option_name + " is not supported!" + InterfaceHelper::GetHint(similar_options));
     }
     if (option_index + 1U >= argc_) {
         throw MissingOptionValue("Option " + option_name + " requires value, but no value has been provided!");
@@ -202,8 +200,7 @@ std::pair<OptionName, OptionValue> CommandLineInterface::ParseOption(const Comma
         !utils::VectorContainsElement<CommandValues>(interface_options_.at(option_name).allowed_values, value)) {
         const std::string similar_values = utils::GetSimilarValues(interface_options_.at(option_name).allowed_values, value, "\n");
 
-        throw ForbiddenOptionValue("Given value " + value + " for option " + option_name + " is not allowed!" +
-                                   (similar_values.empty() ? "" : " Did you mean:\n" + similar_values));
+        throw ForbiddenOptionValue("Given value " + value + " for option " + option_name + " is not allowed!" + InterfaceHelper::GetHint(similar_values));
     }
 
     return std::make_pair(option_name, value);
@@ -214,8 +211,7 @@ FlagName CommandLineInterface::ParseFlag(const CommandName &command_name, const 
     if (!utils::MapContainsKey(interface_flags_, flag_name)) {
         const std::string similar_flags = utils::GetSimilarKeys(interface_flags_, flag_name, "\n");
 
-        throw UnsupportedFlag("Flag " + flag_name + " is not supported!" +
-                              (similar_flags.empty() ? "" : " Did you mean:\n" + similar_flags));
+        throw UnsupportedFlag("Flag " + flag_name + " is not supported!" + InterfaceHelper::GetHint(similar_flags));
     }
     if (utils::MapContainsKey(interface_commands_, command_name) &&
         !utils::VectorContainsElement<CommandValues>(interface_commands_.at(command_name).allowed_flags, flag_name)) {

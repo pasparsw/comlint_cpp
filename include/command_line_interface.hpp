@@ -39,7 +39,6 @@
 #include "interface_helper.hpp"
 
 /*
-TODO: add command hints
 TODO: add commands execution
 */
 

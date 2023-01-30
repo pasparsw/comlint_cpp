@@ -20,6 +20,7 @@ public:
     static bool IsHelpRequired(const unsigned int argc, char** argv, const bool allow_no_args);
     static std::string GetHelp(const std::string &program_name, const std::string &program_description, const Commands &commands,
                                const Options &options, const Flags &flags);
+    static std::string GetHint(const std::string &similar_values);
 
 private:
     static std::string GetHelpHeader(const std::string &program_name, const std::string &program_description);
