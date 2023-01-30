@@ -7,6 +7,4 @@ using namespace comlint;
 int main(int argc, char** argv)
 {
     CommandLineInterface cli(argc, argv);
-
-    
 }

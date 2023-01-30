@@ -30,10 +30,9 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingCommandValue)
     char* argv[] = {"program.exe", "supported_command"};
     CommandLineInterface cli(argc, argv);
 
-    const CommandValues allowed_values {};
     const unsigned int num_of_required_values {1U};
 
-    cli.AddCommand("supported_command", "Some supported command", allowed_values, num_of_required_values);
+    cli.AddCommand("supported_command", "Some supported command", num_of_required_values);
 
     EXPECT_THROW(cli.Parse(), MissingCommandValue);
 }
@@ -47,7 +46,7 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsUnsupportedCommandValue)
     const CommandValues allowed_values {"supported_value"};
     const unsigned int num_of_required_values {1U};
 
-    cli.AddCommand("supported_command", "Some supported command", allowed_values, num_of_required_values);
+    cli.AddCommand("supported_command", "Some supported command", num_of_required_values, allowed_values);
 
     EXPECT_THROW(cli.Parse(), UnsupportedCommandValue);
 }

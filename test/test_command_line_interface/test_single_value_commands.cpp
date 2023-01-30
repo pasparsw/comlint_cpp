@@ -11,10 +11,9 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandAcceptingAnyValue)
     const ParsedCommand expected_parsed_command("open", {"/some/file.txt"}, {}, {});
 
     CommandLineInterface cli(argc, argv);
-    const CommandValues allowed_values {};
     const unsigned int num_of_req_command_values {1U};
 
-    cli.AddCommand("open", "Command to open file", allowed_values, num_of_req_command_values);
+    cli.AddCommand("open", "Command to open file", num_of_req_command_values);
 
     const ParsedCommand parsed_command = cli.Parse();
 
@@ -31,7 +30,7 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandAceptingPredefinedValue
     const CommandValues allowed_values {"file", "application"};
     const unsigned int num_of_req_command_values {1U};
 
-    cli.AddCommand("open", "Command to open file", allowed_values, num_of_req_command_values);
+    cli.AddCommand("open", "Command to open file", num_of_req_command_values, allowed_values);
 
     const ParsedCommand parsed_command = cli.Parse();
 
@@ -54,7 +53,7 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithOneAllowedOption)
     const unsigned int num_of_req_command_values {1U};
     const OptionNames allowed_options {"-allowed_option"};
 
-    cli.AddCommand("open", "Command to open file", {}, num_of_req_command_values, allowed_options);
+    cli.AddCommand("open", "Command to open file", num_of_req_command_values, allowed_values, allowed_options);
 
     const ParsedCommand parsed_command = cli.Parse();
 
@@ -78,7 +77,7 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithCoupleAllowedOption
     const OptionNames allowed_options {"-allowed_option"};
     const FlagNames allowed_flags {"--allowed_flag"};
 
-    cli.AddCommand("open", "Command to open file", allowed_values, num_of_req_command_values, allowed_options, allowed_flags);
+    cli.AddCommand("open", "Command to open file", num_of_req_command_values, allowed_values, allowed_options, allowed_flags);
 
     const ParsedCommand parsed_command = cli.Parse();
 
@@ -103,7 +102,7 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithOneRequiredOption)
     const FlagNames allowed_flags {};
     const OptionNames required_options {"-required_option"};
 
-    cli.AddCommand("open", "Command to open file", allowed_values, num_of_req_command_values, allowed_options, allowed_flags, required_options);
+    cli.AddCommand("open", "Command to open file", num_of_req_command_values, allowed_values, allowed_options, allowed_flags, required_options);
     cli.AddOption("-required_option", "Some required option");
 
     const ParsedCommand parsed_command = cli.Parse();
@@ -132,7 +131,7 @@ TEST(TestCommandLineInterfaceSingleValueCommands, Combo)
     const FlagNames allowed_flags {"--flag_1", "--flag_2", "--flag_3"};
     const OptionNames required_options {"-a"};
 
-    cli.AddCommand("open", "Command to open file", allowed_values, num_of_req_command_values, allowed_options, allowed_flags, required_options);
+    cli.AddCommand("open", "Command to open file", num_of_req_command_values, allowed_values, allowed_options, allowed_flags, required_options);
 
     cli.AddOption("-a", "Some required option");
     cli.AddOption("-b", "Some allowed option");

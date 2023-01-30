@@ -70,8 +70,8 @@ public:
      * @required_options: Optional argument to specify a list of options which must be used together with the command. By default (empty list)
      *                    no options are required.
      */
-    void AddCommand(const CommandName &command_name, const std::string &description, const CommandValues &allowed_values,
-                    const unsigned int num_of_required_values, const OptionNames &allowed_options = {}, const FlagNames &allowed_flags = {},
+    void AddCommand(const CommandName &command_name, const std::string &description, const unsigned int num_of_required_values,
+                    const CommandValues &allowed_values = {}, const OptionNames &allowed_options = {}, const FlagNames &allowed_flags = {},
                     const OptionNames &required_options = {});
     /**
      * @brief Method allowing user to add an option.

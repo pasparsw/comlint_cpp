@@ -30,11 +30,11 @@ CommandLineInterface::CommandLineInterface(const int argc, char** argv, const st
 void CommandLineInterface::AddCommand(const std::string &command_name, const std::string &description, const OptionNames &allowed_options,
                                       const FlagNames &allowed_flags, const OptionNames &required_options)
 {
-    AddCommand(command_name, description, {}, 0U, allowed_options, allowed_flags, required_options);
+    AddCommand(command_name, description, 0U, {}, allowed_options, allowed_flags, required_options);
 }
 
-void CommandLineInterface::AddCommand(const std::string &command_name, const std::string &description, const CommandValues &allowed_values,
-                                      const unsigned int num_of_required_values, const OptionNames &allowed_options, const FlagNames &allowed_flags,
+void CommandLineInterface::AddCommand(const std::string &command_name, const std::string &description, const unsigned int num_of_required_values,
+                                      const CommandValues &allowed_values, const OptionNames &allowed_options, const FlagNames &allowed_flags,
                                       const OptionNames &required_options)
 {
     if (!InterfaceValidator::IsCommandNameValid(command_name)) {
