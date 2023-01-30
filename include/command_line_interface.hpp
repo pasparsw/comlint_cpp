@@ -32,70 +32,95 @@
 
 #include <map>
 
+#include "export_comlint_api.hpp"
 #include "interface_validator.hpp"
+#include "parsed_command.hpp"
+#include "command_line_element_type.hpp"
+#include "interface_helper.hpp"
 
-namespace cli {
+/*
+TODO: add commands execution
+*/
 
-class CommandLineInterface
+namespace comlint {
+
+class PUBLIC_COMLINT_API CommandLineInterface
 {
 public:
-    CommandLineInterface(const int argc, char** argv, const std::string &program_name = "", const std::string &description = "");
+    /**
+     * @brief Constructor.
+     * @argc: argc from main function.
+     * @argv: argv from main function.
+     * @program_name: Program name which should be displayed in help prompt.
+     * @description: Program description which should be displayed in help prompt.
+     * @allow_no_arguments: Setting to true means that program may be ran without providing any command line arguments. Setting to false means that at least
+     *                      one command line argument must be provided (otherwise, the help prompt will be displayed).
+     */
+    CommandLineInterface(const int argc, char** argv, const std::string &program_name = "", const std::string &description = "", const bool allow_no_arguments = true);
 
     /**
      * @brief Method allowing user to add a command which does not take any value.
      * @command_name: Name of the command.
      * @description: Usage help for the command.
      * @allowed_options: Optional argument to specify a list of all options which may be used together with the command. By default (empty list)
-     *                   all registered options are allowed.
-     * @allowed_flags: Optional argument to specify a list of flags which may be used together with the command. By default (empty list) all
-     *                 registered flags are allowed.
+     *                   no options are allowed.
+     * @allowed_flags: Optional argument to specify a list of flags which may be used together with the command. By default (empty list) no
+     *                 flags are allowed.
      * @required_options: Optional argument to specify a list of options which must be used together with the command. By default (empty list)
      *                    no options are required.
      */
-    void AddCommand(const CommandName &command_name, std::string &description, const OptionNames &allowed_options = {},
-                    const FlagNames &allowed_flags = {}, const OptionNames &required_options = {});
+    void AddCommand(const CommandName &command_name, const std::string &description, const OptionNames &allowed_options = NONE,
+                    const FlagNames &allowed_flags = NONE, const OptionNames &required_options = NONE);
     /**
      * @brief Method allowing user to add a command which takes a value.
      * @command_name: Name of the command.
      * @description: Usage help for the command.
-     * @allowed_values: List of allowed values which can be used with the command. Empty list means that all values are allowed.
      * @num_of_required_values: Number of required values for the command.
+     * @allowed_values: List of allowed values which can be used with the command. By default (empty list) all values are allowed.
      * @allowed_options: Optional argument to specify a list of all options which may be used together with the command. By default (empty list)
-     *                   all registered options are allowed.
-     * @allowed_flags: Optional argument to specify a list of flags which may be used together with the command. By default (empty list) all
-     *                 registered flags are allowed.
+     *                   no options are allowed.
+     * @allowed_flags: Optional argument to specify a list of flags which may be used together with the command. By default (empty list) no
+     *                 flags are allowed.
      * @required_options: Optional argument to specify a list of options which must be used together with the command. By default (empty list)
      *                    no options are required.
      */
-    void AddCommand(const CommandName &command_name, std::string &description, const CommandValues &allowed_values,
-                    const unsigned int num_of_required_values, const OptionNames &allowed_options = {}, const FlagNames &allowed_flags = {},
-                    const OptionNames &required_options = {});
+    void AddCommand(const CommandName &command_name, const std::string &description, const unsigned int num_of_required_values,
+                    const CommandValues &allowed_values = ANY, const OptionNames &allowed_options = NONE, const FlagNames &allowed_flags = NONE,
+                    const OptionNames &required_options = NONE);
     /**
      * @brief Method allowing user to add an option.
      * @option_name: Name of the option (must be prefixed with a single dash "-").
      * @description: Usage help for the option.
-     * @allowed_values: Optional argument to specify list of allowed values for the option.
+     * @allowed_values: Optional argument to specify list of allowed values for the option. By default (empty list) any values are allowed.
      */
-    void AddOption(const OptionName &option_name, const std::string &description, const OptionValues &allowed_values = {});
+    void AddOption(const OptionName &option_name, const std::string &description, const OptionValues &allowed_values = ANY);
     /**
      * @brief: Method allowing user to add a flag.
      * @flag_name: Name of the flag (must be prefixed with a double dash "--").
      * @description: Usage help for the flag.
      */
     void AddFlag(const FlagName &flag_name, const std::string &description);
+    /**
+     * @brief: Method parses command line input in context of the declared interface elements (commands, options and flags).
+     * @return: Structure containing parsed command and its properties.
+     */
+    ParsedCommand Parse() const;
 
 private:
-    bool IsCommandAlreadyAdded(const CommandName &command_name) const;
-    bool IsOptionAlreadyAdded(const OptionName &option_name) const;
-    bool IsFlagAlreadyAdded(const FlagName &flag_name) const;
+    CommandLineElementType GetCommandLineElementType(const std::string &input, const unsigned int element_position_index) const;
+    CommandValues ParseCommand(const CommandName &command_name, const unsigned int command_index) const;
+    std::pair<OptionName, OptionValue> ParseOption(const CommandName &command_name, const OptionName &option_name,
+                                                   const unsigned int option_index) const;
+    FlagName ParseFlag(const CommandName &command_name, const FlagName &flag_name, const unsigned int flag_index) const;
 
-    const int argc_;
+    const unsigned int argc_;
     char** argv_;
     std::string program_name_;
     std::string description_;
+    bool allow_no_arguments_;
     Commands interface_commands_;
     Options interface_options_;
-    FlagNames interface_flags_;
+    Flags interface_flags_;
 };
 
-} // cli
+} // comlint
