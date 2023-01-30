@@ -12,7 +12,6 @@ struct ParsedCommand
     ParsedCommand(const CommandName &name, const CommandValues &values, const OptionsMap &options, const FlagsMap &flags);
 
     bool IsOptionUsed(const OptionName &option_name) const;
-    bool IsFlagUsed(const FlagName &flag_name) const;
 
     CommandName name;
     CommandValues values;

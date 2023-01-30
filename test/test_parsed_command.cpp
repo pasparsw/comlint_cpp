@@ -36,28 +36,6 @@ TEST(TestParsedCommand, IsOptionUsedReturnsFalse)
     EXPECT_FALSE(command.IsOptionUsed("-some_option_name"));
 }
 
-TEST(TestParsedCommand, IsFlagUsedReturnsTrue)
-{
-    const CommandName command_name {"command"};
-    const CommandValues values {};
-    const OptionsMap options {};
-    const FlagsMap flags {{"--flag_name", true}};
-    const ParsedCommand command(command_name, values, options, flags);
-
-    EXPECT_TRUE(command.IsFlagUsed("--flag_name"));
-}
-
-TEST(TestParsedCommand, IsFlagUsedReturnsFalse)
-{
-    const CommandName command_name {"command"};
-    const CommandValues values {};
-    const OptionsMap options {};
-    const FlagsMap flags {{"--flag_name", true}};
-    const ParsedCommand command(command_name, values, options, flags);
-
-    EXPECT_FALSE(command.IsFlagUsed("--some_flag_name"));
-}
-
 TEST(TestParsedCommand, ComparsonOperatorReturnsTrueForIdenticalParsedCommands)
 {
     const ParsedCommand parsed_command_1("command",

@@ -162,7 +162,8 @@ std::pair<OptionName, OptionValue> CommandLineInterface::ParseOption(const Comma
     if (option_index + 1U >= argc_) {
         throw MissingOptionValue("Option " + option_name + " requires value, but no value has been provided!");
     }
-    if (!interface_commands_.at(command_name).allowed_options.empty() &&
+    if (utils::MapContainsKey(interface_commands_, command_name) &&
+        !interface_commands_.at(command_name).allowed_options.empty() &&
         !utils::VectorContainsElement<CommandValues>(interface_commands_.at(command_name).allowed_options, option_name)) {
         throw ForbiddenOption("Option " + option_name + " is not allowed for " + command_name + " command!");
     }
@@ -182,7 +183,8 @@ FlagName CommandLineInterface::ParseFlag(const CommandName &command_name, const 
     if (!utils::MapContainsKey(interface_flags_, flag_name)) {
         throw UnsupportedFlag("Flag " + flag_name + " is not supported!");
     }
-    if (!interface_commands_.at(command_name).allowed_flags.empty() &&
+    if (utils::MapContainsKey(interface_commands_, command_name) &&
+        !interface_commands_.at(command_name).allowed_flags.empty() &&
         !utils::VectorContainsElement<CommandValues>(interface_commands_.at(command_name).allowed_flags, flag_name)) {
         throw ForbiddenFlag("Flag " + flag_name + " is not allowed for " + command_name + " command!");
     }

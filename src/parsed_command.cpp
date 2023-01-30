@@ -23,11 +23,6 @@ bool ParsedCommand::IsOptionUsed(const OptionName &option_name) const
 
 }
 
-bool ParsedCommand::IsFlagUsed(const FlagName &flag_name) const
-{
-    return flags.find(flag_name) != flags.end();
-}
-
 bool operator==(const ParsedCommand &lhs, const ParsedCommand &rhs)
 {
   return lhs.name == rhs.name && lhs.values == rhs.values && utils::AreMapsEqual<OptionsMap>(lhs.options, rhs.options) && utils::AreMapsEqual<FlagsMap>(lhs.flags, rhs.flags);

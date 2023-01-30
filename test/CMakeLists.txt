@@ -21,6 +21,7 @@ target_sources(${TARGET} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/test_command_line_interface/test_single_value_commands.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_command_line_interface/test_multiple_value_commands.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_command_line_interface/test_negative_cases.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_command_line_interface/test_non_command_based_interface.cpp
     ${CMAKE_SOURCE_DIR}/src/utils.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_utils.cpp
 )
