@@ -88,19 +88,20 @@ TEST(TestCommandLineInterfaceNonValueCommands, CommandWithOneRequiredOption)
 TEST(TestCommandLineInterfaceNonValueCommands, Combo)
 {
     const int argc = 8;
-    char* argv[] = {"program.exe", "open", "-a", "12", "-c", "some_string", "--flag", "--other-flag"};
+    char* argv[] = {"program.exe", "open", "-a", "12", "-c", "some_string", "--flag_1", "--flag_2"};
 
     const CommandName expected_command_name {"open"};
     const CommandValues expected_command_values {};
     const OptionsMap expected_options {{"-a", "12"},
                                        {"-c", "some_string"}};
-    const FlagsMap expected_flags {{"--flag", true},
-                                   {"--other-flag", true}};
+    const FlagsMap expected_flags {{"--flag_1", true},
+                                   {"--flag_2", true},
+                                   {"--flag_3", false}};
     const ParsedCommand expected_parsed_command(expected_command_name, expected_command_values, expected_options, expected_flags);
 
     CommandLineInterface cli(argc, argv);
     const OptionNames allowed_options {"-a", "-b", "-c"};
-    const FlagNames allowed_flags {"--flag", "--other-flag"};
+    const FlagNames allowed_flags {"--flag_1", "--flag_2", "--flag_3"};
     const OptionNames required_options {"-a"};
 
     cli.AddCommand("open", "Command to open file", allowed_options, allowed_flags, required_options);
@@ -109,8 +110,9 @@ TEST(TestCommandLineInterfaceNonValueCommands, Combo)
     cli.AddOption("-b", "Some allowed option");
     cli.AddOption("-c", "Some other allowed option");
 
-    cli.AddFlag("--flag", "Some flag");
-    cli.AddFlag("--other-flag", "Some other flag");
+    cli.AddFlag("--flag_1", "Some flag 1");
+    cli.AddFlag("--flag_2", "Some flag 2");
+    cli.AddFlag("--flag_3", "Some flag 3");
 
     const ParsedCommand parsed_command = cli.Parse();
 

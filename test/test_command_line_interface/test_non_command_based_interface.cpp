@@ -75,7 +75,8 @@ TEST(TestNonCommandBasedInterface, Combo)
     const OptionsMap expected_options {{"-option_1", "option_value_1"},
                                        {"-option_2", "option_value_2"}};
     const FlagsMap expected_flags {{"--flag_1", true},
-                                   {"--flag_2", true}};
+                                   {"--flag_2", true},
+                                   {"--flag_3", false}};
     const ParsedCommand expected_parsed_command(expected_command_name, expected_command_values, expected_options, expected_flags);
 
     CommandLineInterface cli(argc, argv);
@@ -86,6 +87,7 @@ TEST(TestNonCommandBasedInterface, Combo)
 
     cli.AddFlag("--flag_1", "Some flag 1");
     cli.AddFlag("--flag_2", "Some flag 2");
+    cli.AddFlag("--flag_3", "Some flag 3");
 
     const ParsedCommand parsed_command = cli.Parse();
 

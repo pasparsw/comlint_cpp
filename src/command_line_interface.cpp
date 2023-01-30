@@ -15,6 +15,8 @@
 
 namespace comlint {
 
+static const std::string kDefaultOptionValue {""};
+
 CommandLineInterface::CommandLineInterface(const int argc, char** argv, const std::string &program_name, const std::string &description)
 : argc_{static_cast<unsigned int>(argc)},
   argv_{argv},
@@ -57,7 +59,8 @@ void CommandLineInterface::AddOption(const OptionName &option_name, const std::s
         std::cerr << "Unable to add option " << option_name << " - option with the same name already added" << std::endl;
     }
 
-    interface_options_.insert({option_name, OptionProperties(description, allowed_values, "")});
+    // TODO: implement handling of user defined default option value
+    interface_options_.insert({option_name, OptionProperties(description, allowed_values, kDefaultOptionValue)});
 }
 
 void CommandLineInterface::AddFlag(const FlagName &flag_name, const std::string &description)
@@ -99,6 +102,12 @@ ParsedCommand CommandLineInterface::Parse() const
         if (element_type == CommandLineElementType::kFlag) {
             const FlagName flag = ParseFlag(command_name, element, i);
             flags.insert({flag, true});
+        }
+    }
+
+    for (const auto &[flag_name, flag_properties] : interface_flags_) {
+        if (!utils::MapContainsKey(flags, flag_name)) {
+            flags.insert({flag_name, false});
         }
     }
 
