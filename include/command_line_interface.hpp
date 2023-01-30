@@ -38,6 +38,11 @@
 #include "command_line_element_type.hpp"
 #include "interface_helper.hpp"
 
+/*
+TODO: add command hints
+TODO: add commands execution
+*/
+
 namespace comlint {
 
 class PUBLIC_COMLINT_API CommandLineInterface

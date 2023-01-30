@@ -123,3 +123,69 @@ TEST(TestUtils, VectorContainsElementReturnsFalse)
 
     EXPECT_FALSE(utils::VectorContainsElement<VectorType>(vector, "element_3"));
 }
+
+TEST(TestUtils, MapKeysToStringReturnsProperValue)
+{
+    using MapType = std::map<std::string, int>;
+
+    const MapType map {{"key_1", 1}, {"key_2", 2}, {"key_3", 3}};
+
+    EXPECT_EQ(utils::MapKeysToString(map), "key_1key_2key_3");
+}
+TEST(TestUtils, MapKeysToStringReturnsProperValueWhenSpecifyingDelimiter)
+{
+    using MapType = std::map<std::string, int>;
+
+    const MapType map {{"key_1", 1}, {"key_2", 2}, {"key_3", 3}};
+
+    EXPECT_EQ(utils::MapKeysToString(map, ", "), "key_1, key_2, key_3");
+}
+
+TEST(TestUtils, MapKeysToStringReturnsProperValueWhenDelimiterIsEscapedCharacter)
+{
+    using MapType = std::map<std::string, int>;
+
+    const MapType map {{"key_1", 1}, {"key_2", 2}, {"key_3", 3}};
+
+    EXPECT_EQ(utils::MapKeysToString(map, "\n"), "key_1\nkey_2\nkey_3");
+}
+
+TEST(TestUtils, GetSimilarValuesReturnsProperValues)
+{
+    const std::vector<std::string> vector {"open_file", "open_folder", "close_file", "close_folder"};
+
+    EXPECT_EQ(utils::GetSimilarValues(vector, "open", ", "), "open_file, open_folder");
+    EXPECT_EQ(utils::GetSimilarValues(vector, "file", ", "), "open_file, close_file");
+    EXPECT_EQ(utils::GetSimilarValues(vector, "run_open_file", ", "), "open_file");
+    EXPECT_EQ(utils::GetSimilarValues(vector, "abcdef", ", "), "");
+}
+
+TEST(TestUtils, GetSimilarKeysReturnsProperValues)
+{
+    const std::map<std::string, int> map {{"open_file", 1},
+                                          {"open_folder", 2},
+                                          {"close_file", 3},
+                                          {"close_folder", 4}};
+
+    const std::string similar_values_1 = utils::GetSimilarKeys(map, "open", ", ");
+    const std::string similar_values_2 = utils::GetSimilarKeys(map, "file", ", ");
+    const std::string similar_values_3 = utils::GetSimilarKeys(map, "run_open_file", ", ");
+    const std::string similar_values_4 = utils::GetSimilarKeys(map, "abcdef", ", ");
+
+    const std::string expected_values_1 {"open_file, open_folder"};
+    const std::string expected_values_2 {"open_file, close_file"};
+    const std::string expected_values_3 {"open_file"};
+
+    EXPECT_EQ(similar_values_1.size(), expected_values_1.size());
+    EXPECT_TRUE(similar_values_1.find("open_file") != std::string::npos);
+    EXPECT_TRUE(similar_values_1.find("open_folder") != std::string::npos);
+
+    EXPECT_EQ(similar_values_2.size(), expected_values_2.size());
+    EXPECT_TRUE(similar_values_2.find("open_file") != std::string::npos);
+    EXPECT_TRUE(similar_values_2.find("close_file") != std::string::npos);
+
+    EXPECT_EQ(similar_values_3.size(), expected_values_3.size());
+    EXPECT_TRUE(similar_values_3.find("open_file") != std::string::npos);
+
+    EXPECT_TRUE(similar_values_4.empty());
+}

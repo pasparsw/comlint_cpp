@@ -14,5 +14,18 @@ std::string VectorToString(const std::vector<std::string> &vector, const std::st
     return opening_string + text + closing_string;
 }
 
+std::string GetSimilarValues(const std::vector<std::string> &vector, const std::string &value, const std::string &delimiter)
+{
+    std::string similar_values {};
+
+    for (const auto &element : vector) {
+        if (element.find(value) != std::string::npos || value.find(element) != std::string::npos) {
+            similar_values += element + delimiter;
+        }
+    }
+
+    return similar_values.empty() ? similar_values : similar_values.substr(0U, similar_values.size() - delimiter.size());
+}
+
 } // utils
 } // comlint
