@@ -9,7 +9,15 @@ TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForNoArgument)
     const unsigned int argc = 1;
     char* argv[] = {"program.exe"};
 
-    EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv));
+    EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv, false));
+}
+
+TEST(TestInterfaceHelper, IsHelpRequiredReturnsFalseForNoArgumentAndAllowedNoArguments)
+{
+    const unsigned int argc = 1;
+    char* argv[] = {"program.exe"};
+
+    EXPECT_FALSE(InterfaceHelper::IsHelpRequired(argc, argv, true));
 }
 
 TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpCommand)
@@ -17,7 +25,7 @@ TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpCommand)
     const unsigned int argc = 2;
     char* argv[] = {"program.exe", "help"};
 
-    EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv));
+    EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv, false));
 }
 
 TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpOption)
@@ -25,7 +33,7 @@ TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpOption)
     const unsigned int argc = 2;
     char* argv[] = {"program.exe", "-h"};
 
-    EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv));
+    EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv, false));
 }
 
 TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpFlag)
@@ -33,7 +41,7 @@ TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpFlag)
     const unsigned int argc = 2;
     char* argv[] = {"program.exe", "--help"};
 
-    EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv));
+    EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv, false));
 }
 
 TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForOtherArguments)
@@ -41,7 +49,7 @@ TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForOtherArguments)
     const unsigned int argc = 2;
     char* argv[] = {"program.exe", "some_input"};
 
-    EXPECT_FALSE(InterfaceHelper::IsHelpRequired(argc, argv));
+    EXPECT_FALSE(InterfaceHelper::IsHelpRequired(argc, argv, false));
 }
 
 TEST(TestInterfaceHelper, GetHelpReturnsProperText)
@@ -86,7 +94,6 @@ TEST(TestInterfaceHelper, GetHelpReturnsProperText)
                                       "OPTIONS:\n"
                                       "-allowed_option_1        Description of option 1\n"
                                       "  allowed values         [allowed_option_value_1, allowed_option_value_2]\n"
-                                      "\n"
                                       "-allowed_option_2        Description of option 2\n"
                                       "\n"
                                       "FLAGS:\n"
@@ -94,6 +101,12 @@ TEST(TestInterfaceHelper, GetHelpReturnsProperText)
                                       "--allowed_flag_2         Description of flag 2\n";
     
     const std::string help = InterfaceHelper::GetHelp(program_name, program_description, commands, options, flags);
+
+    std::cout << "-----------------------------------------" << std::endl;
+    std::cout << expected_help << std::endl;
+    std::cout << "-----------------------------------------" << std::endl;
+    std::cout << help << std::endl;
+    std::cout << "-----------------------------------------" << std::endl;
 
     EXPECT_EQ(help, expected_help);
 }

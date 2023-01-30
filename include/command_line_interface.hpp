@@ -32,6 +32,7 @@
 
 #include <map>
 
+#include "export_comlint_api.hpp"
 #include "interface_validator.hpp"
 #include "parsed_command.hpp"
 #include "command_line_element_type.hpp"
@@ -39,10 +40,10 @@
 
 namespace comlint {
 
-class CommandLineInterface
+class PUBLIC_COMLINT_API CommandLineInterface
 {
 public:
-    CommandLineInterface(const int argc, char** argv, const std::string &program_name = "", const std::string &description = "");
+    CommandLineInterface(const int argc, char** argv, const std::string &program_name = "", const std::string &description = "", const bool allow_no_arguments = true);
 
     /**
      * @brief Method allowing user to add a command which does not take any value.
@@ -103,6 +104,7 @@ private:
     char** argv_;
     std::string program_name_;
     std::string description_;
+    bool allow_no_arguments_;
     Commands interface_commands_;
     Options interface_options_;
     Flags interface_flags_;

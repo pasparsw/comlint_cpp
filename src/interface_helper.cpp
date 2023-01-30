@@ -11,9 +11,17 @@ static const std::string kHelpOptionName {"-h"};
 static const std::string kHelpFlagName {"--help"};
 static const unsigned int kHelpElementHolderWidth {25U};
 
-bool InterfaceHelper::IsHelpRequired(const unsigned int argc, char** argv)
+bool InterfaceHelper::IsHelpRequired(const unsigned int argc, char** argv, const bool allow_no_args)
 {
-    return argc == 1U || argv[1U] == kHelpCommandName || argv[1U] == kHelpOptionName || argv[1U] == kHelpFlagName;
+    if (argc == 1U && allow_no_args) {
+        return false;
+    }
+    else if (argc == 1U && !allow_no_args) {
+        return true;
+    }
+    else {
+        return argv[1U] == kHelpCommandName || argv[1U] == kHelpOptionName || argv[1U] == kHelpFlagName;
+    }
 }
 
 std::string InterfaceHelper::GetHelp(const std::string &program_name, const std::string &program_description, const Commands &commands,
@@ -79,9 +87,9 @@ std::string InterfaceHelper::GetOptionsHelp(const Options &options)
         if (!option_properties.allowed_values.empty()) {
             help << std::setw(kHelpElementHolderWidth) << std::left << "  allowed values" << utils::VectorToString(option_properties.allowed_values, ", ", "[", "]") << std::endl;
         }
-
-        help << std::endl;
     }
+
+    help << std::endl;
 
     return help.str();
 }

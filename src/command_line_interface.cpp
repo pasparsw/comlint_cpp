@@ -11,17 +11,19 @@
 #include "exceptions/forbidden_option.hpp"
 #include "exceptions/unsupported_flag.hpp"
 #include "exceptions/forbidden_flag.hpp"
+#include "exceptions/missing_required_option.hpp"
 #include "utils.hpp"
 
 namespace comlint {
 
 static const std::string kDefaultOptionValue {""};
 
-CommandLineInterface::CommandLineInterface(const int argc, char** argv, const std::string &program_name, const std::string &description)
+CommandLineInterface::CommandLineInterface(const int argc, char** argv, const std::string &program_name, const std::string &description, const bool allow_no_arguments)
 : argc_{static_cast<unsigned int>(argc)},
   argv_{argv},
   program_name_{program_name.empty() ? argv[0] : program_name},
   description_{description},
+  allow_no_arguments_{allow_no_arguments},
   interface_commands_{},
   interface_options_{},
   interface_flags_{}
@@ -77,9 +79,9 @@ void CommandLineInterface::AddFlag(const FlagName &flag_name, const std::string 
 
 ParsedCommand CommandLineInterface::Parse() const
 {
-    if (InterfaceHelper::IsHelpRequired(argc_, argv_)) {
+    if (InterfaceHelper::IsHelpRequired(argc_, argv_, allow_no_arguments_)) {
         std::cout << InterfaceHelper::GetHelp(program_name_, description_, interface_commands_, interface_options_, interface_flags_);
-        return ParsedCommand();
+        return ParsedCommand("help", {}, {}, {});
     }
 
     CommandName command_name {};
@@ -105,6 +107,14 @@ ParsedCommand CommandLineInterface::Parse() const
         }
     }
 
+    if (!command_name.empty() && utils::MapContainsKey(interface_commands_, command_name)) {
+        for (const auto &required_option : interface_commands_.at(command_name).required_options) {
+            if (!utils::MapContainsKey(options, required_option)) {
+                throw MissingRequiredOption("Command " + command_name + " requires option " + required_option + ", but such option has not been provided!");
+            }
+        }
+    }
+
     for (const auto &[flag_name, flag_properties] : interface_flags_) {
         if (!utils::MapContainsKey(flags, flag_name)) {
             flags.insert({flag_name, false});
@@ -116,7 +126,7 @@ ParsedCommand CommandLineInterface::Parse() const
 
 CommandLineElementType CommandLineInterface::GetCommandLineElementType(const std::string &input, const unsigned int element_position_index) const
 {
-    if (InterfaceValidator::IsCommandNameValid(input) && argv_[element_position_index - 1U] == program_name_) {
+    if (InterfaceValidator::IsCommandNameValid(input) && element_position_index == 1U) {
         return CommandLineElementType::kCommand;
     }
     if (InterfaceValidator::IsOptionNameValid(input)) {
@@ -141,7 +151,9 @@ CommandValues CommandLineInterface::ParseCommand(const CommandName &command_name
     if (!interface_commands_.at(command_name).RequiresValue()) {
         return {};
     }
-    else if (command_index + interface_commands_.at(command_name).num_of_required_values >= argc_) {
+    else if (command_index + interface_commands_.at(command_name).num_of_required_values >= argc_ ||
+             GetCommandLineElementType(argv_[command_index + 1U], command_index + 1U) == CommandLineElementType::kOption ||
+             GetCommandLineElementType(argv_[command_index + 1U], command_index + 1U) == CommandLineElementType::kFlag) {
         throw MissingCommandValue("Command " + command_name + " requires " + std::to_string(interface_commands_.at(command_name).num_of_required_values) +
                                   " value(s), but they were not provided!");
     }

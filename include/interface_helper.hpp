@@ -17,7 +17,7 @@ using Flags = std::map<FlagName, FlagProperties>;
 class InterfaceHelper
 {
 public:
-    static bool IsHelpRequired(const unsigned int argc, char** argv);
+    static bool IsHelpRequired(const unsigned int argc, char** argv, const bool allow_no_args);
     static std::string GetHelp(const std::string &program_name, const std::string &program_description, const Commands &commands,
                                const Options &options, const Flags &flags);
 

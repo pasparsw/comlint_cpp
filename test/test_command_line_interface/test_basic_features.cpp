@@ -40,31 +40,34 @@ TEST(TestCommandLineInterfaceBasicFeatures, ParseReturnsEmptyParsedCommandIfInpu
 {
     const int argc = 2;
     char* argv[] = {"program.exe", "help"};
+    const ParsedCommand expected_parsed_command("help", {}, {}, {});
     CommandLineInterface cli(argc, argv);
 
     const ParsedCommand parsed_command = cli.Parse();
 
-    EXPECT_EQ(parsed_command, ParsedCommand());
+    EXPECT_EQ(parsed_command, expected_parsed_command);
 }
 
 TEST(TestCommandLineInterfaceBasicFeatures, ParseReturnsEmptyParsedCommandIfInputContainsHelpOption)
 {
     const int argc = 2;
     char* argv[] = {"program.exe", "-h"};
+    const ParsedCommand expected_parsed_command("help", {}, {}, {});
     CommandLineInterface cli(argc, argv);
 
     const ParsedCommand parsed_command = cli.Parse();
 
-    EXPECT_EQ(parsed_command, ParsedCommand());
+    EXPECT_EQ(parsed_command, expected_parsed_command);
 }
 
 TEST(TestCommandLineInterfaceBasicFeatures, ParseReturnsEmptyParsedCommandIfInputContainsHelpFlag)
 {
     const int argc = 2;
     char* argv[] = {"program.exe", "--help"};
+    const ParsedCommand expected_parsed_command("help", {}, {}, {});
     CommandLineInterface cli(argc, argv);
 
     const ParsedCommand parsed_command = cli.Parse();
 
-    EXPECT_EQ(parsed_command, ParsedCommand());
+    EXPECT_EQ(parsed_command, expected_parsed_command);
 }
