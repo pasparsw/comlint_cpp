@@ -97,7 +97,7 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingRequiredOption)
     char* argv[] = {"program.exe", "supported_command", "-allowed_option", "some_value"};
     CommandLineInterface cli(argc, argv);
     const OptionNames allowed_options {"-allowed_option", "-required_option"};
-    const FlagNames allowed_flags {};
+    const FlagNames allowed_flags = ANY;
     const OptionNames required_options {"-required_option"};
 
     cli.AddCommand("supported_command", "Some supported command", allowed_options, allowed_flags, required_options);
@@ -171,7 +171,7 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenFlag)
     char* argv[] = {"program.exe", "command", "--flag_2"};
     CommandLineInterface cli(argc, argv);
 
-    const OptionNames allowed_options {};
+    const OptionNames allowed_options = ANY;
     const FlagNames allowed_flags {"--flag_1"};
 
     cli.AddCommand("command", "Some command", allowed_options, allowed_flags);

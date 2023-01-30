@@ -56,8 +56,8 @@ public:
      * @required_options: Optional argument to specify a list of options which must be used together with the command. By default (empty list)
      *                    no options are required.
      */
-    void AddCommand(const CommandName &command_name, const std::string &description, const OptionNames &allowed_options = {},
-                    const FlagNames &allowed_flags = {}, const OptionNames &required_options = {});
+    void AddCommand(const CommandName &command_name, const std::string &description, const OptionNames &allowed_options = ANY,
+                    const FlagNames &allowed_flags = ANY, const OptionNames &required_options = {});
     /**
      * @brief Method allowing user to add a command which takes a value.
      * @command_name: Name of the command.
@@ -72,7 +72,7 @@ public:
      *                    no options are required.
      */
     void AddCommand(const CommandName &command_name, const std::string &description, const unsigned int num_of_required_values,
-                    const CommandValues &allowed_values = {}, const OptionNames &allowed_options = {}, const FlagNames &allowed_flags = {},
+                    const CommandValues &allowed_values = ANY, const OptionNames &allowed_options = ANY, const FlagNames &allowed_flags = ANY,
                     const OptionNames &required_options = {});
     /**
      * @brief Method allowing user to add an option.
@@ -80,7 +80,7 @@ public:
      * @description: Usage help for the option.
      * @allowed_values: Optional argument to specify list of allowed values for the option.
      */
-    void AddOption(const OptionName &option_name, const std::string &description, const OptionValues &allowed_values = {});
+    void AddOption(const OptionName &option_name, const std::string &description, const OptionValues &allowed_values = ANY);
     /**
      * @brief: Method allowing user to add a flag.
      * @flag_name: Name of the flag (must be prefixed with a double dash "--").

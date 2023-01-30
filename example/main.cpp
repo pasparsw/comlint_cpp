@@ -4,14 +4,6 @@
 
 using namespace comlint;
 
-/*
-This file shows an example implementation of command line interface using Comlint and basing on well-known git commands.
-git status -b develop --verbose --short
-git add /file.txt --verbose --interactive
-git commit -m "Message" -c Commit --verbose --amend
-git merge branch1 branch2 -s recursive/resolve/subtree
-*/
-
 void run_add_command(const ParsedCommand &command)
 {
     std::cout << "Running add command for file " << command.values.front() << std::endl;
@@ -72,9 +64,9 @@ int main(int argc, char** argv)
     try {
         CommandLineInterface cli(argc, argv, "ExampleApplication", "Example usage of Comlint library basing on some git commands", false);
 
-        cli.AddCommand("add", "Add files to commit", 1U, {}, {}, {"--verbose", "--interactive"});
+        cli.AddCommand("add", "Add files to commit", 1U, ANY, ANY, {"--verbose", "--interactive"});
         cli.AddCommand("commit", "Commit changes", {"-m", "-c"}, {"--verbose", "--amend"});
-        cli.AddCommand("merge", "Merge two branches", 2U, {}, {"-s", "-m"}, {}, {"-s"});
+        cli.AddCommand("merge", "Merge two branches", 2U, ANY, {"-s", "-m"}, {}, {"-s"});
         cli.AddCommand("status", "Show current status", {"-b"}, {"--verbose", "--short"});
 
         cli.AddOption("-b", "Specify branch name");

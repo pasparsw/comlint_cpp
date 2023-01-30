@@ -74,7 +74,7 @@ TEST(TestCommandLineInterfaceNonValueCommands, CommandWithOneRequiredOption)
 
     CommandLineInterface cli(argc, argv);
     const OptionNames allowed_options {"-required_option"};
-    const FlagNames allowed_flags {};
+    const FlagNames allowed_flags = ANY;
     const OptionNames required_options {"-required_option"};
 
     cli.AddCommand("open", "Command to open file", allowed_options, allowed_flags, required_options);

@@ -19,4 +19,6 @@ using OptionValues = std::vector<OptionValue>;
 using OptionsMap = std::map<OptionName, OptionValue>;
 using FlagsMap = std::map<FlagName, bool>;
 
+static const std::vector<std::string> ANY {};
+
 } // comlint

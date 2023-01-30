@@ -49,7 +49,7 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithOneAllowedOption)
     const ParsedCommand expected_parsed_command(expected_command_name, expected_command_values, expected_options, expected_flags);
 
     CommandLineInterface cli(argc, argv);
-    const CommandValues allowed_values {};
+    const CommandValues allowed_values = ANY;
     const unsigned int num_of_req_command_values {1U};
     const OptionNames allowed_options {"-allowed_option"};
 
@@ -72,7 +72,7 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithCoupleAllowedOption
     const ParsedCommand expected_parsed_command(expected_command_name, expected_command_values, expected_options, expected_flags);
 
     CommandLineInterface cli(argc, argv);
-    const CommandValues allowed_values {};
+    const CommandValues allowed_values = ANY;
     const unsigned int num_of_req_command_values {1U};
     const OptionNames allowed_options {"-allowed_option"};
     const FlagNames allowed_flags {"--allowed_flag"};
@@ -96,10 +96,10 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithOneRequiredOption)
     const ParsedCommand expected_parsed_command(expected_command_name, expected_command_values, expected_options, expected_flags);
 
     CommandLineInterface cli(argc, argv);
-    const CommandValues allowed_values {};
+    const CommandValues allowed_values = ANY;
     const unsigned int num_of_req_command_values {1U};
     const OptionNames allowed_options {"-required_option"};
-    const FlagNames allowed_flags {};
+    const FlagNames allowed_flags = ANY;
     const OptionNames required_options {"-required_option"};
 
     cli.AddCommand("open", "Command to open file", num_of_req_command_values, allowed_values, allowed_options, allowed_flags, required_options);
@@ -125,7 +125,7 @@ TEST(TestCommandLineInterfaceSingleValueCommands, Combo)
     const ParsedCommand expected_parsed_command(expected_command_name, expected_command_values, expected_options, expected_flags);
 
     CommandLineInterface cli(argc, argv);
-    const CommandValues allowed_values {};
+    const CommandValues allowed_values = ANY;
     const unsigned int num_of_req_command_values {1U};
     const OptionNames allowed_options {"-a", "-b", "-c"};
     const FlagNames allowed_flags {"--flag_1", "--flag_2", "--flag_3"};
