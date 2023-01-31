@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "types.hpp"
+#include "command_handler_interface.hpp"
 
 namespace comlint {
 
@@ -19,7 +20,8 @@ struct CommandProperties
       allowed_flags{allowed_flags},
       description{description},
       num_of_required_values{num_of_required_values},
-      required_options{required_options}
+      required_options{required_options},
+      command_handler{nullptr}
     {}
 
     bool RequiresValue() const { return num_of_required_values > 0U; }
@@ -30,6 +32,7 @@ struct CommandProperties
     std::string description;
     unsigned int num_of_required_values;
     OptionNames required_options;
+    CommandHandlerPtr command_handler;
 };
 
 } // comlint
