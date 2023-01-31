@@ -101,7 +101,15 @@ public:
      * @return: Structure containing parsed command and its properties.
      */
     ParsedCommand Parse() const;
+    /**
+     * @brief Method allowing user to register a command handler for the given command name.
+     * @command_name: Name of the command.
+     * @command_handler: Object containing implementation of all the logic which should be perfomred when specific command is used.
+     */
     void AddCommandHandler(const CommandName &command_name, CommandHandlerPtr command_handler);
+    /**
+     * @brief Automatically runs command handler for the corresponding command which was provided by the user in the command line.
+     */
     void Run();
 
 private:
