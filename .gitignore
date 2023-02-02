@@ -2,3 +2,4 @@
 build
 examples/build
 examples/.vscode
+examples/comlint_cpp
