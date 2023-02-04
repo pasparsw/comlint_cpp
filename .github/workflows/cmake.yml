@@ -33,7 +33,7 @@ jobs:
       run: ${{github.workspace}}\build\test\${{env.BUILD_TYPE}}\ComlintCppTests.exe
     
     - name: Configure CMake for Comlint examples
-      run: cmake -B ${{github.workspace}}\examples\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B ${{github.workspace}}\examples\build -S ${{github.workspace}}\examples -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build Comlint examples
       run: cmake --build ${{github.workspace}}\examples\build --config ${{env.BUILD_TYPE}}
