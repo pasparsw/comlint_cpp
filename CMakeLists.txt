@@ -9,8 +9,10 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 SET(CMAKE_INSTALL_PREFIX ".")
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
+set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include/comlint)
 set(SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
+set(INSTALLATION_DIR ${CMAKE_BINARY_DIR}/comlint_cpp)
+set(EXAMPLES_DIR ${CMAKE_SOURCE_DIR}/examples)
 
 add_definitions(-DEXPORT_COMLINT_API=1)
 
@@ -36,3 +38,7 @@ enable_testing()
 
 add_subdirectory(libs/googletest)
 add_subdirectory(test)
+
+install(TARGETS ${PROJECT_NAME} DESTINATION ${INSTALLATION_DIR})
+install(DIRECTORY ${INCLUDE_DIR}/ DESTINATION ${INSTALLATION_DIR}/include/comlint FILES_MATCHING PATTERN "*.hpp")
+install(DIRECTORY ${INSTALLATION_DIR} DESTINATION ${EXAMPLES_DIR})

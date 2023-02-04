@@ -11,6 +11,9 @@
 #include "exceptions/unsupported_flag.hpp"
 #include "exceptions/forbidden_flag.hpp"
 #include "exceptions/missing_required_option.hpp"
+#include "exceptions/invalid_command_handler.hpp"
+#include "exceptions/missing_command_handler.hpp"
+#include "mock_command_handler.hpp"
 
 using namespace comlint;
 
@@ -208,4 +211,42 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenFlagForSpecified
     cli.AddFlag("--flag_2", "Some flag 2");
 
     EXPECT_THROW(cli.Parse(), ForbiddenFlag);
+}
+
+TEST(TestCommandLineInterfaceNegativeCases, AddCommandHandlerThrowsUnsupportedCommand)
+{
+    const int argc = 1;
+    char* argv[] = {"program.exe"};
+    CommandLineInterface cli(argc, argv);
+
+    cli.AddCommand("command", "Some command");
+
+    EXPECT_THROW(cli.AddCommandHandler("unsupported_command", nullptr), UnsupportedCommand);
+}
+
+TEST(TestCommandLineInterfaceNegativeCases, AddCommandHandlerThrowsInvalidCommandHandler)
+{
+    const int argc = 1;
+    char* argv[] = {"program.exe"};
+    CommandLineInterface cli(argc, argv);
+
+    cli.AddCommand("command", "Some command");
+
+    EXPECT_THROW(cli.AddCommandHandler("command", nullptr), InvalidCommandHandler);
+}
+
+TEST(TestCommandLineInterfaceNegativeCases, AddCommandHandlerThrowsMissingCommandHandler)
+{
+    const int argc = 2;
+    char* argv[] = {"program.exe", "command_2"};
+    CommandLineInterface cli(argc, argv);
+
+    cli.AddCommand("command_1", "Some command 1");
+    cli.AddCommand("command_2", "Some command 2");
+
+    CommandHandlerPtr command_1_handler = std::make_shared<MockCommandHandler>();
+
+    cli.AddCommandHandler("command_1", command_1_handler);
+
+    EXPECT_THROW(cli.Run(), MissingCommandHandler);
 }

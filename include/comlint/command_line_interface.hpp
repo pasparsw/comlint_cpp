@@ -30,17 +30,13 @@
 
 #pragma once
 
-#include <map>
+#include <functional>
 
 #include "export_comlint_api.hpp"
 #include "interface_validator.hpp"
 #include "parsed_command.hpp"
 #include "command_line_element_type.hpp"
 #include "interface_helper.hpp"
-
-/*
-TODO: add commands execution
-*/
 
 namespace comlint {
 
@@ -105,6 +101,16 @@ public:
      * @return: Structure containing parsed command and its properties.
      */
     ParsedCommand Parse() const;
+    /**
+     * @brief Method allowing user to register a command handler for the given command name.
+     * @command_name: Name of the command.
+     * @command_handler: Object containing implementation of all the logic which should be perfomred when specific command is used.
+     */
+    void AddCommandHandler(const CommandName &command_name, CommandHandlerPtr command_handler);
+    /**
+     * @brief Automatically runs command handler for the corresponding command which was provided by the user in the command line.
+     */
+    void Run();
 
 private:
     CommandLineElementType GetCommandLineElementType(const std::string &input, const unsigned int element_position_index) const;

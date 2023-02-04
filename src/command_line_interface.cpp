@@ -12,6 +12,8 @@
 #include "exceptions/unsupported_flag.hpp"
 #include "exceptions/forbidden_flag.hpp"
 #include "exceptions/missing_required_option.hpp"
+#include "exceptions/invalid_command_handler.hpp"
+#include "exceptions/missing_command_handler.hpp"
 #include "utils.hpp"
 
 namespace comlint {
@@ -39,6 +41,7 @@ void CommandLineInterface::AddCommand(const std::string &command_name, const std
                                       const CommandValues &allowed_values, const OptionNames &allowed_options, const FlagNames &allowed_flags,
                                       const OptionNames &required_options)
 {
+    // TODO: make these separate exceptions
     if (!InterfaceValidator::IsCommandNameValid(command_name)) {
         std::cerr << "Unable to add command " << command_name << " - command name invalid" << std::endl;
         return;
@@ -54,6 +57,7 @@ void CommandLineInterface::AddCommand(const std::string &command_name, const std
 
 void CommandLineInterface::AddOption(const OptionName &option_name, const std::string &description, const OptionValues &allowed_values)
 {
+    // TODO: make these separate exceptions
     if (!InterfaceValidator::IsOptionNameValid(option_name)) {
         std::cerr << "Unable to add option " << option_name << " - option name invalid" << std::endl;
     }
@@ -122,6 +126,30 @@ ParsedCommand CommandLineInterface::Parse() const
     }
 
     return ParsedCommand(command_name, command_values, options, flags);
+}
+
+void CommandLineInterface::AddCommandHandler(const CommandName &command_name, CommandHandlerPtr command_handler)
+{
+    if (!utils::MapContainsKey(interface_commands_, command_name)) {
+        throw UnsupportedCommand("Unable to add command handler! Command " + command_name + " is not added to command line interface definition.");
+    }
+    if (!command_handler) {
+        throw InvalidCommandHandler("Provided command handler for " + command_name + " command is a nullptr!");
+    }
+
+    interface_commands_.at(command_name).command_handler = command_handler;
+}
+
+void CommandLineInterface::Run()
+{
+    const ParsedCommand parsed_command = Parse();
+
+    if (interface_commands_.at(parsed_command.name).command_handler) {
+        interface_commands_.at(parsed_command.name).command_handler->Run(parsed_command.values, parsed_command.options, parsed_command.flags);
+    }
+    else {
+        throw MissingCommandHandler("Unable to run command handler for " + parsed_command.name + " command! No command handler has been added for this command.");
+    }
 }
 
 CommandLineElementType CommandLineInterface::GetCommandLineElementType(const std::string &input, const unsigned int element_position_index) const

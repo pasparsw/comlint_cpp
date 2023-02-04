@@ -44,7 +44,7 @@ TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpFlag)
     EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv, false));
 }
 
-TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForOtherArguments)
+TEST(TestInterfaceHelper, IsHelpRequiredReturnsFalseForOtherArguments)
 {
     const unsigned int argc = 2;
     char* argv[] = {"program.exe", "some_input"};
@@ -101,12 +101,6 @@ TEST(TestInterfaceHelper, GetHelpReturnsProperText)
                                       "--allowed_flag_2         Description of flag 2\n";
     
     const std::string help = InterfaceHelper::GetHelp(program_name, program_description, commands, options, flags);
-
-    std::cout << "-----------------------------------------" << std::endl;
-    std::cout << expected_help << std::endl;
-    std::cout << "-----------------------------------------" << std::endl;
-    std::cout << help << std::endl;
-    std::cout << "-----------------------------------------" << std::endl;
 
     EXPECT_EQ(help, expected_help);
 }
