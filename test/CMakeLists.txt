@@ -3,7 +3,7 @@ set(TARGET ComlintCppTests)
 add_executable(${TARGET})
 
 target_include_directories(${TARGET} PRIVATE
-    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include/comlint
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/test_command_line_interface
 )

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <command_line_interface.hpp>
+#include <comlint/command_line_interface.hpp>
 
 using namespace comlint;
 
