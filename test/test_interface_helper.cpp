@@ -44,7 +44,7 @@ TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpFlag)
     EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv, false));
 }
 
-TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForOtherArguments)
+TEST(TestInterfaceHelper, IsHelpRequiredReturnsFalseForOtherArguments)
 {
     const unsigned int argc = 2;
     char* argv[] = {"program.exe", "some_input"};

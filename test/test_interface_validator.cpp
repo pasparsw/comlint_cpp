@@ -74,10 +74,10 @@ TEST(TestInterfaceValidator, IsFlagNameValidReturnsFalseForEmptyFlagName) {
   EXPECT_FALSE(comlint::InterfaceValidator::IsFlagNameValid(""));
 }
 
-TEST(TestInterfaceValidator, IsFlagNameValidReturnsFalseForOptionNameWithNoFlagPrefix) {
+TEST(TestInterfaceValidator, IsFlagNameValidReturnsFalseForFlagNameWithNoFlagPrefix) {
   EXPECT_FALSE(comlint::InterfaceValidator::IsFlagNameValid("flag"));
 }
 
-TEST(TestInterfaceValidator, IsFlagNameValidReturnsFalseForOptionNameWithOptionPrefix) {
+TEST(TestInterfaceValidator, IsFlagNameValidReturnsFalseForFlagNameWithOptionPrefix) {
   EXPECT_FALSE(comlint::InterfaceValidator::IsFlagNameValid("-flag"));
 }

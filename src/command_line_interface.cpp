@@ -41,6 +41,7 @@ void CommandLineInterface::AddCommand(const std::string &command_name, const std
                                       const CommandValues &allowed_values, const OptionNames &allowed_options, const FlagNames &allowed_flags,
                                       const OptionNames &required_options)
 {
+    // TODO: make these separate exceptions
     if (!InterfaceValidator::IsCommandNameValid(command_name)) {
         std::cerr << "Unable to add command " << command_name << " - command name invalid" << std::endl;
         return;
@@ -56,6 +57,7 @@ void CommandLineInterface::AddCommand(const std::string &command_name, const std
 
 void CommandLineInterface::AddOption(const OptionName &option_name, const std::string &description, const OptionValues &allowed_values)
 {
+    // TODO: make these separate exceptions
     if (!InterfaceValidator::IsOptionNameValid(option_name)) {
         std::cerr << "Unable to add option " << option_name << " - option name invalid" << std::endl;
     }
