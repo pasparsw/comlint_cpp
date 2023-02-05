@@ -11,7 +11,7 @@ public:
     : full_message_{exception_name + ": " + message}
     {}
 
-    const char* what() const
+    const char* what() const throw()
     {
         return full_message_.c_str();
     }

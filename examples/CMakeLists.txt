@@ -39,4 +39,12 @@ target_link_libraries(${RUNNING_EXAMPLE_APP} PRIVATE
     ${COMLINT_CPP_LIB}
 )
 
-install(FILES ${COMLINT_CPP_DIR}/ComlintCpp.dll DESTINATION ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+if (UNIX)
+    install(TARGETS ${PARSING_EXAMPLE_APP} DESTINATION bin)
+    install(TARGETS ${RUNNING_EXAMPLE_APP} DESTINATION bin)
+    install(FILES ${COMLINT_CPP_DIR}/libComlintCpp.so DESTINATION bin)
+endif(UNIX)
+
+if (WIN32)
+    install(FILES ${COMLINT_CPP_DIR}/ComlintCpp.dll DESTINATION bin)
+endif(WIN32)

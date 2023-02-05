@@ -35,3 +35,7 @@ target_link_libraries(${TARGET} PRIVATE
 )
 
 add_test(${TARGET} ${TARGET})
+
+if (UNIX)
+    install(TARGETS ${TARGET} DESTINATION bin)
+endif(UNIX)
