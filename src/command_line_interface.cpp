@@ -148,7 +148,7 @@ void CommandLineInterface::Run()
     if (parsed_command.name == kHelpCommandIndicator) {
         return;
     }
-    if (!utils::MapContainsKey(interface_commands_, parsed_command.name) && interface_commands_.at(parsed_command.name).command_handler) {
+    if (!interface_commands_.at(parsed_command.name).command_handler) {
         throw MissingCommandHandler("Unable to run command handler for " + parsed_command.name + " command! No command handler has been added for this command.");
     }
 
