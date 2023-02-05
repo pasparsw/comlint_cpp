@@ -86,16 +86,15 @@ int main(int argc, char** argv)
 
         // add option "-b" (which can take any value by default)
         cli.AddOption("-b", "Specify branch name");
-        // add option "-b" (which can take any value by default)
+        // add option "-m" (which can take any value by default)
         cli.AddOption("-m", "Provide message");
-        // add option "-b" (which can take any value by default)
+        // add option "-c" (which can take any value by default)
         cli.AddOption("-c", "Provide commit hash");
-        // add option "-b" which can take one of three allowed values: recursive, resolve or subtree
+        // add option "-s" which can take one of three allowed values: recursive, resolve or subtree
         cli.AddOption("-s", "Specify merging strategy", {"recursive", "resolve", "subtree"});
 
         // add flags
         cli.AddFlag("--verbose", "Show verbose output");
-        cli.AddFlag("--short", "Show short status output");
         cli.AddFlag("--interactive", "Add files to commit interactively");
         cli.AddFlag("--amend", "Join to previous commit");
 

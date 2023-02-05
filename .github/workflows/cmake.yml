@@ -7,11 +7,10 @@ on:
     branches: [ "main" ]
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
 
 jobs:
-  build:
+  Windows-build:
     runs-on: windows-latest
 
     steps:
@@ -20,29 +19,29 @@ jobs:
     - name: Update submodules
       run: git submodule update --init
 
-    - name: Configure CMake for ComlintCpp
-      run: cmake -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+    - name: Build
+      run: ${{github.workspace}}\scripts\build.bat ${{env.BUILD_TYPE}}
 
-    - name: Build ComlintCpp
-      run: cmake --build ${{github.workspace}}\build --config ${{env.BUILD_TYPE}}
-    
-    - name: Install ComlintCpp
-      run: cmake --install ${{github.workspace}}\build --config ${{env.BUILD_TYPE}}
+    - name: Run unit tests
+      run: ${{github.workspace}}\build\test\${{env.BUILD_TYPE}}\ComlintCppTests.exe
+
+    - name: Run smoke tests
+      run: ${{github.workspace}}\scripts\smoke_tests.bat
+
+  Linux-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Update submodules
+      run: git submodule update --init
+
+    - name: Build
+      run: ${{github.workspace}}/scripts/build.sh ${{env.BUILD_TYPE}}
 
     - name: Run unit tests for ComlintCpp
-      run: ${{github.workspace}}\build\test\${{env.BUILD_TYPE}}\ComlintCppTests.exe
+      run: ${{github.workspace}}/build/bin/ComlintCppTests
     
-    - name: Configure CMake for Comlint examples
-      run: cmake -B ${{github.workspace}}\examples\build -S ${{github.workspace}}\examples -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-
-    - name: Build Comlint examples
-      run: cmake --build ${{github.workspace}}\examples\build --config ${{env.BUILD_TYPE}}
-    
-    - name: Install Comlint examples
-      run: cmake --install ${{github.workspace}}\examples\build --config ${{env.BUILD_TYPE}}
-
-    - name: Run smoke test for parsing example
-      run: ${{github.workspace}}\examples\build\${{env.BUILD_TYPE}}\parsing_example_app.exe -h
-    
-    - name: Run smoke test for running example
-      run: ${{github.workspace}}\examples\build\${{env.BUILD_TYPE}}\running_example_app.exe -h
+    - name: Run smoke tests
+      run: ${{github.workspace}}/scripts/smoke_tests.sh

@@ -19,6 +19,7 @@
 namespace comlint {
 
 static const std::string kDefaultOptionValue {""};
+static const std::string kHelpCommandIndicator {"help"};
 
 CommandLineInterface::CommandLineInterface(const int argc, char** argv, const std::string &program_name, const std::string &description, const bool allow_no_arguments)
 : argc_{static_cast<unsigned int>(argc)},
@@ -85,7 +86,7 @@ ParsedCommand CommandLineInterface::Parse() const
 {
     if (InterfaceHelper::IsHelpRequired(argc_, argv_, allow_no_arguments_)) {
         std::cout << InterfaceHelper::GetHelp(program_name_, description_, interface_commands_, interface_options_, interface_flags_);
-        return ParsedCommand("help", {}, {}, {});
+        return ParsedCommand(kHelpCommandIndicator, {}, {}, {});
     }
 
     CommandName command_name {};
@@ -143,13 +144,15 @@ void CommandLineInterface::AddCommandHandler(const CommandName &command_name, Co
 void CommandLineInterface::Run()
 {
     const ParsedCommand parsed_command = Parse();
-
-    if (interface_commands_.at(parsed_command.name).command_handler) {
-        interface_commands_.at(parsed_command.name).command_handler->Run(parsed_command.values, parsed_command.options, parsed_command.flags);
+    
+    if (parsed_command.name == kHelpCommandIndicator) {
+        return;
     }
-    else {
+    if (!interface_commands_.at(parsed_command.name).command_handler) {
         throw MissingCommandHandler("Unable to run command handler for " + parsed_command.name + " command! No command handler has been added for this command.");
     }
+
+    interface_commands_.at(parsed_command.name).command_handler->Run(parsed_command.values, parsed_command.options, parsed_command.flags);
 }
 
 CommandLineElementType CommandLineInterface::GetCommandLineElementType(const std::string &input, const unsigned int element_position_index) const
