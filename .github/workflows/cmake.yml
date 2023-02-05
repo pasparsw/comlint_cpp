@@ -29,7 +29,7 @@ jobs:
       run: ${{github.workspace}}\scripts\smoke_tests.bat
 
   Linux-build:
-    runs-on: linux-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
