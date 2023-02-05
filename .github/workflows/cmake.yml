@@ -10,7 +10,7 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build:
+  Windows build:
     runs-on: windows-latest
 
     steps:
@@ -46,8 +46,7 @@ jobs:
     - name: Run smoke test for running example
       run: ${{github.workspace}}\examples\build\${{env.BUILD_TYPE}}\running_example_app.exe -h
 
-jobs:
-  build:
+  Linux build:
     runs-on: linux-latest
 
     steps:
