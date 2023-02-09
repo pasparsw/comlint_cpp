@@ -10,7 +10,7 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  Build:
+  Windows-build:
     runs-on: windows-latest
 
     steps:
@@ -22,16 +22,6 @@ jobs:
     - name: Build
       run: ${{github.workspace}}\scripts\build.bat ${{env.BUILD_TYPE}}
 
-    - name: Run unit tests
-      run: ${{github.workspace}}\build\test\${{env.BUILD_TYPE}}\ComlintCppTests.exe
-
-    - name: Run smoke tests
-      run: ${{github.workspace}}\scripts\smoke_tests.bat ${{env.BUILD_TYPE}}
-
-  Test:
-    runs-on: windows-latest
-
-    steps:
     - name: Run unit tests
       run: ${{github.workspace}}\build\test\${{env.BUILD_TYPE}}\ComlintCppTests.exe
 

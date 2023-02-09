@@ -10,7 +10,7 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  Build:
+  Linux-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,10 +22,6 @@ jobs:
     - name: Build
       run: ${{github.workspace}}/scripts/build.sh ${{env.BUILD_TYPE}}
 
-  Test:
-    runs-on: ubuntu-latest
-
-    steps:
     - name: Run unit tests for ComlintCpp
       run: ${{github.workspace}}/build/bin/ComlintCppTests
     
