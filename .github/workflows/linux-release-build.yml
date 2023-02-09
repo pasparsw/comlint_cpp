@@ -1,4 +1,4 @@
-name: CMake
+name: Linux release build
 
 on:
   push:
@@ -10,24 +10,6 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  Windows-build:
-    runs-on: windows-latest
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Update submodules
-      run: git submodule update --init
-
-    - name: Build
-      run: ${{github.workspace}}\scripts\build.bat ${{env.BUILD_TYPE}}
-
-    - name: Run unit tests
-      run: ${{github.workspace}}\build\test\${{env.BUILD_TYPE}}\ComlintCppTests.exe
-
-    - name: Run smoke tests
-      run: ${{github.workspace}}\scripts\smoke_tests.bat ${{env.BUILD_TYPE}}
-
   Linux-build:
     runs-on: ubuntu-latest
 
