@@ -13,6 +13,12 @@
 #include "exceptions/missing_required_option.hpp"
 #include "exceptions/invalid_command_handler.hpp"
 #include "exceptions/missing_command_handler.hpp"
+#include "exceptions/invalid_command_name.hpp"
+#include "exceptions/duplicated_command.hpp"
+#include "exceptions/invalid_option_name.hpp"
+#include "exceptions/duplicated_option.hpp"
+#include "exceptions/invalid_flag_name.hpp"
+#include "exceptions/duplicated_flag.hpp"
 #include "mock_command_handler.hpp"
 
 using namespace comlint;
@@ -249,4 +255,64 @@ TEST(TestCommandLineInterfaceNegativeCases, AddCommandHandlerThrowsMissingComman
     cli.AddCommandHandler("command_1", command_1_handler);
 
     EXPECT_THROW(cli.Run(), MissingCommandHandler);
+}
+
+TEST(TestCommandLineInterfaceNegativeCases, AddCommandThrowsInvalidCommandName)
+{
+    const int argc = 2;
+    char* argv[] = {"program.exe"};
+    CommandLineInterface cli(argc, argv);
+
+    EXPECT_THROW(cli.AddCommand("-command", "Some command"), InvalidCommandName);
+}
+
+TEST(TestCommandLineInterfaceNegativeCases, AddCommandThrowsDuplicatedCommand)
+{
+    const int argc = 2;
+    char* argv[] = {"program.exe"};
+    CommandLineInterface cli(argc, argv);
+
+    cli.AddCommand("command", "Some command");
+
+    EXPECT_THROW(cli.AddCommand("command", "Some command"), DuplicatedCommand);
+}
+
+TEST(TestCommandLineInterfaceNegativeCases, AddOptionThrowsInvalidOptionName)
+{
+    const int argc = 2;
+    char* argv[] = {"program.exe"};
+    CommandLineInterface cli(argc, argv);
+
+    EXPECT_THROW(cli.AddOption("option", "Some option"), InvalidOptionName);
+}
+
+TEST(TestCommandLineInterfaceNegativeCases, AddOptionThrowsDuplicatedOption)
+{
+    const int argc = 2;
+    char* argv[] = {"program.exe"};
+    CommandLineInterface cli(argc, argv);
+
+    cli.AddOption("-option", "Some option");
+
+    EXPECT_THROW(cli.AddOption("-option", "Some option"), DuplicatedOption);
+}
+
+TEST(TestCommandLineInterfaceNegativeCases, AddFlagThrowsInvalidFlagName)
+{
+    const int argc = 2;
+    char* argv[] = {"program.exe"};
+    CommandLineInterface cli(argc, argv);
+
+    EXPECT_THROW(cli.AddFlag("flag", "Some flag"), InvalidFlagName);
+}
+
+TEST(TestCommandLineInterfaceNegativeCases, AddFlagThrowsDuplicatedFlag)
+{
+    const int argc = 2;
+    char* argv[] = {"program.exe"};
+    CommandLineInterface cli(argc, argv);
+
+    cli.AddFlag("--flag", "Some flag");
+
+    EXPECT_THROW(cli.AddFlag("--flag", "Some flag"), DuplicatedFlag);
 }

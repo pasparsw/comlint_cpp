@@ -14,6 +14,12 @@
 #include "exceptions/missing_required_option.hpp"
 #include "exceptions/invalid_command_handler.hpp"
 #include "exceptions/missing_command_handler.hpp"
+#include "exceptions/invalid_command_name.hpp"
+#include "exceptions/duplicated_command.hpp"
+#include "exceptions/invalid_option_name.hpp"
+#include "exceptions/duplicated_option.hpp"
+#include "exceptions/invalid_flag_name.hpp"
+#include "exceptions/duplicated_flag.hpp"
 #include "utils.hpp"
 
 namespace comlint {
@@ -42,14 +48,11 @@ void CommandLineInterface::AddCommand(const std::string &command_name, const std
                                       const CommandValues &allowed_values, const OptionNames &allowed_options, const FlagNames &allowed_flags,
                                       const OptionNames &required_options)
 {
-    // TODO: make these separate exceptions
     if (!InterfaceValidator::IsCommandNameValid(command_name)) {
-        std::cerr << "Unable to add command " << command_name << " - command name invalid" << std::endl;
-        return;
+        throw InvalidCommandName("Unable to add " + command_name + " command! Name of the command is invalid.");
     }
     if (utils::MapContainsKey(interface_commands_, command_name)) {
-        std::cerr << "Unable to add command " << command_name << " - command with the same name already added" << std::endl;
-        return;
+        throw DuplicatedCommand("Unable to add " + command_name + " command! Command with the same name is already added.");
     }
 
     interface_commands_.insert({command_name, CommandProperties(allowed_values, allowed_options, allowed_flags, description,
@@ -58,12 +61,11 @@ void CommandLineInterface::AddCommand(const std::string &command_name, const std
 
 void CommandLineInterface::AddOption(const OptionName &option_name, const std::string &description, const OptionValues &allowed_values)
 {
-    // TODO: make these separate exceptions
     if (!InterfaceValidator::IsOptionNameValid(option_name)) {
-        std::cerr << "Unable to add option " << option_name << " - option name invalid" << std::endl;
+        throw InvalidOptionName("Unable to add " + option_name + " option! Name of the option is invalid.");
     }
     if (utils::MapContainsKey(interface_options_, option_name)) {
-        std::cerr << "Unable to add option " << option_name << " - option with the same name already added" << std::endl;
+        throw DuplicatedOption("Unable to add " + option_name + " option! Option with the same name is already added.");
     }
 
     // TODO: implement handling of user defined default option value
@@ -73,10 +75,10 @@ void CommandLineInterface::AddOption(const OptionName &option_name, const std::s
 void CommandLineInterface::AddFlag(const FlagName &flag_name, const std::string &description)
 {
     if (!InterfaceValidator::IsFlagNameValid(flag_name)) {
-        std::cerr << "Unable to add flag " << flag_name << " - flag name invalid" << std::endl;
+        throw InvalidFlagName("Unable to add " + flag_name + " flag! Name of the flag is invalid.");
     }
     if (utils::MapContainsKey(interface_flags_, flag_name)) {
-        std::cerr << "Unable to add flag " << flag_name << " - flag with the same name already added" << std::endl;
+        throw DuplicatedFlag("Unable to add " + flag_name + " flag! Flag with the same name is already added.");
     }
 
     interface_flags_.insert({flag_name, FlagProperties(description)});

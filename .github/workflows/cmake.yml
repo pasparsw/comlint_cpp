@@ -26,7 +26,7 @@ jobs:
       run: ${{github.workspace}}\build\test\${{env.BUILD_TYPE}}\ComlintCppTests.exe
 
     - name: Run smoke tests
-      run: ${{github.workspace}}\scripts\smoke_tests.bat
+      run: ${{github.workspace}}\scripts\smoke_tests.bat ${{env.BUILD_TYPE}}
 
   Linux-build:
     runs-on: ubuntu-latest
