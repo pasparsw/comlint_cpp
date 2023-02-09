@@ -1,0 +1,29 @@
+name: CMake
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  Linux-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Update submodules
+      run: git submodule update --init
+
+    - name: Build
+      run: ${{github.workspace}}/scripts/build.sh ${{env.BUILD_TYPE}}
+
+    - name: Run unit tests for ComlintCpp
+      run: ${{github.workspace}}/build/bin/ComlintCppTests
+    
+    - name: Run smoke tests
+      run: ${{github.workspace}}/scripts/smoke_tests.sh
