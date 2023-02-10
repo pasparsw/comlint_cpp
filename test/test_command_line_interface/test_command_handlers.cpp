@@ -25,7 +25,7 @@ TEST(TestCommandLineInterfaceCommandHandlers, ProperCommandHandlerIsRan)
     cli.AddCommandHandler("command_2", command_2_handler);
     cli.AddCommandHandler("command_3", command_3_handler);
 
-    EXPECT_CALL(*command_2_handler, Run(_, _, _)).Times(1);
+    EXPECT_CALL(*command_2_handler, Run(_)).Times(1);
 
     cli.Run();
 }
@@ -47,6 +47,7 @@ TEST(TestCommandLineInterfaceCommandHandlers, ProperCommandHandlerIsRanWithPrope
     const FlagsMap expected_flags {{"--flag_1", true},
                                    {"--flag_2", true},
                                    {"--flag_3", false}};
+    const ParsedCommand expected_parsed_command("command_2", expected_command_values, expected_options, expected_flags);
 
     cli.AddCommand("command_1", "Some command 1", {"-option_1", "-option_2"}, {"--flag_1", "--flag_2", "--flag_3"});
     cli.AddCommand("command_2", "Some command 2", 2U, {}, {"-option_1", "-option_2"}, {"--flag_1", "--flag_2", "--flag_3"});
@@ -63,7 +64,7 @@ TEST(TestCommandLineInterfaceCommandHandlers, ProperCommandHandlerIsRanWithPrope
     cli.AddCommandHandler("command_2", command_2_handler);
     cli.AddCommandHandler("command_3", command_3_handler);
 
-    EXPECT_CALL(*command_2_handler, Run(expected_command_values, expected_options, expected_flags)).Times(1);
+    EXPECT_CALL(*command_2_handler, Run(expected_parsed_command)).Times(1);
 
     cli.Run();
 }

@@ -154,7 +154,7 @@ void CommandLineInterface::Run()
         throw MissingCommandHandler("Unable to run command handler for " + parsed_command.name + " command! No command handler has been added for this command.");
     }
 
-    interface_commands_.at(parsed_command.name).command_handler->Run(parsed_command.values, parsed_command.options, parsed_command.flags);
+    interface_commands_.at(parsed_command.name).command_handler->Run(parsed_command);
 }
 
 CommandLineElementType CommandLineInterface::GetCommandLineElementType(const std::string &input, const unsigned int element_position_index) const

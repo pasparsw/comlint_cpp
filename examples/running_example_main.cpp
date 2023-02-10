@@ -7,14 +7,14 @@ using namespace comlint;
 class AddCommandHandler : public CommandHandlerInterface
 {
 public:
-    void Run(const CommandValues &values, const OptionsMap &options, const FlagsMap &flags) final
+    void Run(const ParsedCommand &command) final
     {
-        std::cout << "Running add command for file " << values.front() << std::endl;
+        std::cout << "Running add command for file " << command.values.front() << std::endl;
 
-        if (flags.at("--verbose")) {
+        if (command.flags.at("--verbose")) {
             std::cout << "Being verbose" << std::endl;
         }
-        if (flags.at("--interactive")) {
+        if (command.flags.at("--interactive")) {
             std::cout << "Adding interactively" << std::endl;
         }
     }
@@ -23,20 +23,20 @@ public:
 class CommitCommandHandler : public CommandHandlerInterface
 {
 public:
-    void Run(const CommandValues &values, const OptionsMap &options, const FlagsMap &flags) final
+    void Run(const ParsedCommand &command) final
     {
         std::cout << "Running commit command!" << std::endl;
 
-        if (options.find("-m") != options.end()) {
-            std::cout << "Adding message " << options.at("-m") << std::endl;
+        if (command.IsOptionUsed("-m")) {
+            std::cout << "Adding message " << command.options.at("-m") << std::endl;
         }
-        if (options.find("-c") != options.end()) {
-            std::cout << "Re-editting commit " << options.at("-c") << std::endl;
+        if (command.IsOptionUsed("-c")) {
+            std::cout << "Re-editting commit " << command.options.at("-c") << std::endl;
         }
-        if (flags.at("--amend")) {
+        if (command.flags.at("--amend")) {
             std::cout << "Amending commit" << std::endl;
         }
-        if (flags.at("--verbose")) {
+        if (command.flags.at("--verbose")) {
             std::cout << "Being verbose" << std::endl;
         }
     }
@@ -45,13 +45,13 @@ public:
 class MergeCommandHandler : public CommandHandlerInterface
 {
 public:
-    void Run(const CommandValues &values, const OptionsMap &options, const FlagsMap &flags) final
+    void Run(const ParsedCommand &command) final
     {
-        std::cout << "Running merge command for branches " << values.at(0U) << " and " << values.at(1U) 
-              << " using strategy " << options.at("-s") << std::endl;
+        std::cout << "Running merge command for branches " << command.values.at(0U) << " and " << command.values.at(1U) 
+              << " using strategy " << command.options.at("-s") << std::endl;
 
-        if (options.find("-m") != options.end()) {
-            std::cout << "Adding message " << options.at("-m") << std::endl;
+        if (command.IsOptionUsed("-m")) {
+            std::cout << "Adding message " << command.options.at("-m") << std::endl;
         }
     }
 };
@@ -59,11 +59,11 @@ public:
 class SubmoduleCommandHandler : public CommandHandlerInterface
 {
 public:
-    void Run(const CommandValues &values, const OptionsMap &options, const FlagsMap &flags) final
+    void Run(const ParsedCommand &command) final
     {
-        std::cout << "Running submodule " << values.front() << " command!" << std::endl;
+        std::cout << "Running submodule " << command.values.front() << " command!" << std::endl;
 
-        if (flags.at("--verbose")) {
+        if (command.flags.at("--verbose")) {
             std::cout << "Being verbose" << std::endl;
         }
     }
