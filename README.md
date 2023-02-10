@@ -133,7 +133,12 @@ or
 The basis for all actions is creation of instance of Comlint command line interface object:
 
 ```cpp
-comlint::CommandLineInterface cli(argc, argv);
+#include <comlint/command_line_interface.hpp>
+
+int main(int argc, char** argv)
+{
+    comlint::CommandLineInterface cli(argc, argv);
+}
 ```
 
 Comlint bases on the user command line input, so there are 2 required constructor's parameters: argc and argv. However, you may customize your command line interface help by providing program name and program description.
@@ -225,7 +230,7 @@ cli.AddOption("-option", "Option description", {"value1", "value2"});
 Because flags accept no values (see the [Conventions used](#conventions-used)), adding a flag limits to only two parameters - its name and description:
 
 ```cpp
-cli.AddOption("--flag", "Flag description");
+cli.AddFlag("--flag", "Flag description");
 ```
 
 ### <a name="parsing_command_line_interface"></a>Parsing command line interface
@@ -260,7 +265,7 @@ For more advanced example of command parsing, check _examples/parsing_example_ma
 
 ### <a name="running_command_line_interface"></a>Running command line interface
 
-To make things easier, Comlint offers one more way to handle user input arguments - automatic command handler execution. Developer may implement his/her own class implementing logic which should be executed after user calls one of the supported commands in the constructed command line interface. Such class must derive from `comlint::CommandHandlerInterface` class and implement `Run(const comlint::ParsedCommand &command)` method.Code in this implementation will be executed automatically whenever user uses the corresponding command. Let's say we implement such class:
+To make things easier, Comlint offers one more way to handle user input arguments - automatic command handler execution. Developer may implement his/her own class implementing logic which should be executed after user calls one of the supported commands in the constructed command line interface. Such class must derive from `comlint::CommandHandlerInterface` class and implement `Run(const comlint::ParsedCommand &command)` method. Code in this implementation will be executed automatically whenever user uses the corresponding command. Let's say we implement such class:
 
 ```cpp
 class SomeCommandHandler : public comlint::CommandHandlerInterface
