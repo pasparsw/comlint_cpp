@@ -260,7 +260,7 @@ For more advanced example of command parsing, check _examples/parsing_example_ma
 
 ### <a name="running_command_line_interface"></a>Running command line interface
 
-To make things easier, Comlint offers one more way to handle user input arguments - automatic command handler execution. Developer may implement his/her own class implementing logic which should be executed after user calls one of the supported commands in the constructed command line interface. Such class must derive from `comlint::CommandHandlerInterface` class and implement `Run(const comlint::ParsedCommand &command)` method.Code in this implementation will be executed automatically whenever user uses the corresponding command. Let's say we implement such class:
+To make things easier, Comlint offers one more way to handle user input arguments - automatic command handler execution. Developer may implement his/her own class implementing logic which should be executed after user calls one of the supported commands in the constructed command line interface. Such class must derive from `comlint::CommandHandlerInterface` class and implement `Run(const comlint::ParsedCommand &command)` method. Code in this implementation will be executed automatically whenever user uses the corresponding command. Let's say we implement such class:
 
 ```cpp
 class SomeCommandHandler : public comlint::CommandHandlerInterface
