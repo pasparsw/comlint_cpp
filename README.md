@@ -3,18 +3,31 @@
 
 # Comlint for C++
 Table of contents:
+
 [What is it?](#what_is_it)
+
 [How to build and install](#how_to_build_and_install)
+
 &emsp;[How to build comlint_cpp repository](#how_to_build_comlint_cpp_repository)
+
 &emsp;[How to embed Comlint into your project](#how_to_embed_comlint_into_your_project)
+
 &emsp;[How to use Comlint release package](#how_to_use_comlint_release_package)
+
 [Conventions used](#conventions_used)
+
 [How to use](#how_to_use)
+
 &emsp;[Creating command line interface](#creating_command_line_interface)
+
 &emsp;&emsp;[Adding commands](#adding_commands)
+
 &emsp;&emsp;[Adding options](#adding_options)
+
 &emsp;&emsp;[Adding flags](#adding_flags)
+
 &emsp;[Parsing command line interface](#parsing_command_line_interface)
+
 &emsp;[Running command line interface](#running_command_line_interface)
 
 ## <a name="what_is_it"></a>What is it?
