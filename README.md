@@ -317,3 +317,6 @@ For more advanced example of automatic command running, check _examples/running_
 * `UnsupportedCommand` - user called a command which was not added to the interface
 * `UnsupportedFlag` - user used a flag which was not added to the interface
 * `UnsupportedOption` - user used option which was not added to the interface
+
+
+[![Stargazers repo roster for @pawbar94/comlint_cpp](https://reporoster.com/stars/pawbar94/comlint_cpp)](https://github.com/pawbar94/comlint_cpp/stargazers)
