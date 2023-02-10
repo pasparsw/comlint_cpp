@@ -321,4 +321,4 @@ For more advanced example of automatic command running, check _examples/running_
 
 [![Stargazers repo roster for @pawbar94/comlint_cpp](https://reporoster.com/stars/pawbar94/comlint_cpp)](https://github.com/pawbar94/comlint_cpp/stargazers)
 
-[![Forkers repo roster for @USERNAME/REPO_NAME](https://reporoster.com/forks/USERNAME/REPO_NAME)](https://github.com/USERNAME/REPO_NAME/network/members)
+[![Forkers repo roster for @pawbar94/comlint_cpp](https://reporoster.com/forks/pawbar94/comlint_cpp)](https://github.com/pawbar94/comlint_cpp/network/members)
