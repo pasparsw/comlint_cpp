@@ -225,7 +225,7 @@ cli.AddOption("-option", "Option description", {"value1", "value2"});
 Because flags accept no values (see the [Conventions used](#conventions-used)), adding a flag limits to only two parameters - its name and description:
 
 ```cpp
-cli.AddOption("--flag", "Flag description");
+cli.AddFlag("--flag", "Flag description");
 ```
 
 ### <a name="parsing_command_line_interface"></a>Parsing command line interface
