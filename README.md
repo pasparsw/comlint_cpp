@@ -319,6 +319,6 @@ For more advanced example of automatic command running, check _examples/running_
 * `UnsupportedOption` - user used option which was not added to the interface
 
 
-[![Stargazers repo roster for @pawbar94/comlint_cpp](https://reporoster.com/stars/pawbar94/comlint_cpp)](https://github.com/pawbar94/comlint_cpp/stargazers)
 
+[![Stargazers repo roster for @pawbar94/comlint_cpp](https://reporoster.com/stars/pawbar94/comlint_cpp)](https://github.com/pawbar94/comlint_cpp/stargazers)
 [![Forkers repo roster for @pawbar94/comlint_cpp](https://reporoster.com/forks/pawbar94/comlint_cpp)](https://github.com/pawbar94/comlint_cpp/network/members)
