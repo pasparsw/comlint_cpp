@@ -4,31 +4,20 @@
 # Comlint for C++
 Table of contents:
 
-[What is it?](#what_is_it)
-
-[How to build and install](#how_to_build_and_install)
-
-&emsp;[How to build comlint_cpp repository](#how_to_build_comlint_cpp_repository)
-
-&emsp;[How to embed Comlint into your project](#how_to_embed_comlint_into_your_project)
-
-&emsp;[How to use Comlint release package](#how_to_use_comlint_release_package)
-
-[Conventions used](#conventions_used)
-
-[How to use](#how_to_use)
-
-&emsp;[Creating command line interface](#creating_command_line_interface)
-
-&emsp;&emsp;[Adding commands](#adding_commands)
-
-&emsp;&emsp;[Adding options](#adding_options)
-
-&emsp;&emsp;[Adding flags](#adding_flags)
-
-&emsp;[Parsing command line interface](#parsing_command_line_interface)
-
-&emsp;[Running command line interface](#running_command_line_interface)
+[What is it?](#what_is_it)<br>
+[How to build and install](#how_to_build_and_install)<br>
+&emsp;[How to build comlint_cpp repository](#how_to_build_comlint_cpp_repository)<br>
+&emsp;[How to embed Comlint into your project](#how_to_embed_comlint_into_your_project)<br>
+&emsp;[How to use Comlint release package](#how_to_use_comlint_release_package)<br>
+[Conventions used](#conventions_used)<br>
+[How to use](#how_to_use)<br>
+&emsp;[Creating command line interface](#creating_command_line_interface)<br>
+&emsp;&emsp;[Adding commands](#adding_commands)<br>
+&emsp;&emsp;[Adding options](#adding_options)<br>
+&emsp;&emsp;[Adding flags](#adding_flags)<br>
+&emsp;[Parsing command line interface](#parsing_command_line_interface)<br>
+&emsp;[Running command line interface](#running_command_line_interface)<br>
+[Exceptions you may expect](#exceptions_you_may_expect)<br>
 
 ## <a name="what_is_it"></a>What is it?
 
@@ -264,9 +253,62 @@ if (parsed_command.IsOptionUsed("-option")) {
 In case of flags, you don't have to check for their presence before the usage because flags which were not used by the user have assigned _false_ value.
 
 ```cpp
-parsed_command.flags["--flag"]; // this returns false if --flag was not used
+parsed_command.flags["--flag"]; // this returns false if --flag was not used, true otherwise
 ```
+
+For more advanced example of command parsing, check _examples/parsing_example_main.cpp_ file.
 
 ### <a name="running_command_line_interface"></a>Running command line interface
 
-WIP
+To make things easier, Comlint offers one more way to handle user input arguments - automatic command handler execution. Developer may implement his/her own class implementing logic which should be executed after user calls one of the supported commands in the constructed command line interface. Such class must derive from `comlint::CommandHandlerInterface` class and implement `Run(const comlint::ParsedCommand &command)` method.Code in this implementation will be executed automatically whenever user uses the corresponding command. Let's say we implement such class:
+
+```cpp
+class SomeCommandHandler : public comlint::CommandHandlerInterface
+{
+public:
+    void Run(const comlint::ParsedCommand &command) final
+    {
+        std::cout << "Running logic for some command!" << std::endl;
+    }
+};
+```
+
+And then in main we define command line interface as follows:
+
+```cpp
+comlint::CommandHandlerPtr some_command_handler = std::make_shared<SomeCommandHandler>();
+
+cli.AddCommand("some_command", "Some command description");
+cli.AddCommandHandler("some_command", some_command_handler);
+```
+
+Having that set up, we can call:
+
+```cpp
+cli.Run();
+```
+
+This one line will automatically call `Run` method from `SomeCommandHandler` class whenever user calls `program_name.exe some_command`.
+
+For more advanced example of automatic command running, check _examples/running_example_main.cpp_ file.
+
+## <a name="exceptions_you_may_expect"></a>Exceptions you may expect
+* `DuplicatedCommand` - you're trying to add a command to the interface which has been already added
+* `DuplicatedFlag` - you're trying to add a flag to the interface which has been already added
+* `DuplicatedOption` - you're trying to add an option to the interface which has been already added
+* `ForbiddenFlag` - user used flag which is generally supported by the interface, but not allowed to use with the associated command
+* `ForbiddenOptionValue` - user provided a value for the option which is not on the list of the allowed values for that option
+* `ForbiddenOption` - user used option which is generally supported by the interface, but not allowed to use with the associated command
+* `InvalidCommandHandler` - something's wrong with the command handler that you're trying to register (most probably it's a nullptr)
+* `InvalidCommandName` - you're trying to add a command to the interface which has invalid name (most probably it begins with "-" or "--")
+* `InvalidCommandPosition` - supported and valid command name has been found, but it's not directly after program name
+* `InvalidFlagName` - you're trying to add a flag to the interface which has invalid name (most probably it doesn't start with "--" or starts with "-")
+* `InvalidOptionName` - you're trying to add an option to the interface which has invalid name (most probably it doesn't start with "-" or starts with "--")
+* `MissingCommandHandler` - you used `cli.Run()` method, but the user provided command for which no command handler has been registered
+* `MissingCommandValue` - user called your program with a command which requires value(s), but the sufficient number of values has not been provided
+* `MissingOptionValue` - user used an option, but gave it no value
+* `MissingRequiredOption` - user called a command without an option which has been defined as a required one for that command
+* `UnsupportedCommandValue` - user provided a value for the command which is not on the list of the allowed values for that command
+* `UnsupportedCommand` - user called a command which was not added to the interface
+* `UnsupportedFlag` - user used a flag which was not added to the interface
+* `UnsupportedOption` - user used option which was not added to the interface

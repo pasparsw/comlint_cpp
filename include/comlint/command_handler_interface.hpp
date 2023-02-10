@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "types.hpp"
+#include "parsed_command.hpp"
 
 namespace comlint {
 
@@ -11,7 +11,7 @@ class CommandHandlerInterface
 public:
     virtual ~CommandHandlerInterface() = default;
 
-    virtual void Run(const CommandValues &values, const OptionsMap &options, const FlagsMap &flags) = 0;
+    virtual void Run(const ParsedCommand &command) = 0;
 };
 
 using CommandHandlerPtr = std::shared_ptr<CommandHandlerInterface>;

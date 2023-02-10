@@ -7,5 +7,5 @@ using namespace comlint;
 class MockCommandHandler : public CommandHandlerInterface
 {
 public:
-    MOCK_METHOD(void, Run, (const CommandValues &command_values, const OptionsMap &options, const FlagsMap &flags), (override));
+    MOCK_METHOD(void, Run, (const ParsedCommand &command), (override));
 };
