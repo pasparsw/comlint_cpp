@@ -133,7 +133,12 @@ or
 The basis for all actions is creation of instance of Comlint command line interface object:
 
 ```cpp
-comlint::CommandLineInterface cli(argc, argv);
+#include <comlint/command_line_interface.hpp>
+
+int main(int argc, char** argv)
+{
+    comlint::CommandLineInterface cli(argc, argv);
+}
 ```
 
 Comlint bases on the user command line input, so there are 2 required constructor's parameters: argc and argv. However, you may customize your command line interface help by providing program name and program description.
