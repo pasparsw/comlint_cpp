@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 BUILD_TYPE=$1
 
 if [ -z "$BUILD_TYPE" ]
@@ -16,7 +18,7 @@ EXAMPLES_BUILD_DIR=$EXAMPLES_DIR/build
 echo ----- Build type: $BUILD_TYPE -----
 
 echo "----- Configuring CMake for ComlintCpp for sources in $REPO_DIR and build in $COMLINT_BUILD_DIR -----"
-cmake -S $REPO_DIR -B $COMLINT_BUILD_DIR -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+cmake -S $REPO_DIR -B $COMLINT_BUILD_DIR -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_UNIT_TESTS=ON
 echo "----- ComlintCpp CMake configuration done -----"
 
 echo "----- Building ComlintCpp in $COMLINT_BUILD_DIR -----"

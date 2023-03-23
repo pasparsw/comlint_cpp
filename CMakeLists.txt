@@ -34,10 +34,12 @@ target_sources(${PROJECT_NAME} PRIVATE
     ${SOURCE_DIR}/utils.cpp
 )
 
-enable_testing()
+if (BUILD_UNIT_TESTS)
+    enable_testing()
 
-add_subdirectory(libs/googletest)
-add_subdirectory(test)
+    add_subdirectory(libs/googletest)
+    add_subdirectory(test)
+endif()
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${INSTALLATION_DIR})
 install(DIRECTORY ${INCLUDE_DIR}/ DESTINATION ${INSTALLATION_DIR}/include/comlint FILES_MATCHING PATTERN "*.hpp")
