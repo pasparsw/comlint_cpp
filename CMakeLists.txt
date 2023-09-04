@@ -41,6 +41,13 @@ if (BUILD_UNIT_TESTS)
     add_subdirectory(test)
 endif()
 
+include(GenerateExportHeader)
+generate_export_header(${PROJECT_NAME}
+    BASE_NAME ${PROJECT_NAME}
+    EXPORT_MACRO_NAME PUBLIC_COMLINT_API
+    EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/include/comlint/export_comlint_api.hpp
+)
+
 install(TARGETS ${PROJECT_NAME} DESTINATION ${INSTALLATION_DIR})
 install(DIRECTORY ${INCLUDE_DIR}/ DESTINATION ${INSTALLATION_DIR}/include/comlint FILES_MATCHING PATTERN "*.hpp")
 install(DIRECTORY ${INSTALLATION_DIR} DESTINATION ${EXAMPLES_DIR})
