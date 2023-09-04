@@ -40,7 +40,7 @@
 
 namespace comlint {
 
-class PUBLIC_COMLINT_API CommandLineInterface
+class CommandLineInterface
 {
 public:
     /**
@@ -52,7 +52,7 @@ public:
      * @allow_no_arguments: Setting to true means that program may be ran without providing any command line arguments. Setting to false means that at least
      *                      one command line argument must be provided (otherwise, the help prompt will be displayed).
      */
-    CommandLineInterface(const int argc, char** argv, const std::string &program_name = "", const std::string &description = "", const bool allow_no_arguments = true);
+    PUBLIC_COMLINT_API CommandLineInterface(const int argc, char** argv, const std::string &program_name = "", const std::string &description = "", const bool allow_no_arguments = true);
 
     /**
      * @brief Method allowing user to add a command which does not take any value.
@@ -65,8 +65,8 @@ public:
      * @required_options: Optional argument to specify a list of options which must be used together with the command. By default (empty list)
      *                    no options are required.
      */
-    void AddCommand(const CommandName &command_name, const std::string &description, const OptionNames &allowed_options = NONE,
-                    const FlagNames &allowed_flags = NONE, const OptionNames &required_options = NONE);
+    PUBLIC_COMLINT_API void AddCommand(const CommandName &command_name, const std::string &description, const OptionNames &allowed_options = NONE,
+                                       const FlagNames &allowed_flags = NONE, const OptionNames &required_options = NONE);
     /**
      * @brief Method allowing user to add a command which takes a value.
      * @command_name: Name of the command.
@@ -80,37 +80,37 @@ public:
      * @required_options: Optional argument to specify a list of options which must be used together with the command. By default (empty list)
      *                    no options are required.
      */
-    void AddCommand(const CommandName &command_name, const std::string &description, const unsigned int num_of_required_values,
-                    const CommandValues &allowed_values = ANY, const OptionNames &allowed_options = NONE, const FlagNames &allowed_flags = NONE,
-                    const OptionNames &required_options = NONE);
+    PUBLIC_COMLINT_API void AddCommand(const CommandName &command_name, const std::string &description, const unsigned int num_of_required_values,
+                                       const CommandValues &allowed_values = ANY, const OptionNames &allowed_options = NONE, const FlagNames &allowed_flags = NONE,
+                                       const OptionNames &required_options = NONE);
     /**
      * @brief Method allowing user to add an option.
      * @option_name: Name of the option (must be prefixed with a single dash "-").
      * @description: Usage help for the option.
      * @allowed_values: Optional argument to specify list of allowed values for the option. By default (empty list) any values are allowed.
      */
-    void AddOption(const OptionName &option_name, const std::string &description, const OptionValues &allowed_values = ANY);
+    PUBLIC_COMLINT_API void AddOption(const OptionName &option_name, const std::string &description, const OptionValues &allowed_values = ANY);
     /**
      * @brief: Method allowing user to add a flag.
      * @flag_name: Name of the flag (must be prefixed with a double dash "--").
      * @description: Usage help for the flag.
      */
-    void AddFlag(const FlagName &flag_name, const std::string &description);
+    PUBLIC_COMLINT_API void AddFlag(const FlagName &flag_name, const std::string &description);
     /**
      * @brief: Method parses command line input in context of the declared interface elements (commands, options and flags).
      * @return: Structure containing parsed command and its properties.
      */
-    ParsedCommand Parse() const;
+    PUBLIC_COMLINT_API ParsedCommand Parse() const;
     /**
      * @brief Method allowing user to register a command handler for the given command name.
      * @command_name: Name of the command.
      * @command_handler: Object containing implementation of all the logic which should be perfomred when specific command is used.
      */
-    void AddCommandHandler(const CommandName &command_name, CommandHandlerPtr command_handler);
+    PUBLIC_COMLINT_API void AddCommandHandler(const CommandName &command_name, CommandHandlerPtr command_handler);
     /**
      * @brief Automatically runs command handler for the corresponding command which was provided by the user in the command line.
      */
-    void Run();
+    PUBLIC_COMLINT_API void Run();
 
 private:
     CommandLineElementType GetCommandLineElementType(const std::string &input, const unsigned int element_position_index) const;

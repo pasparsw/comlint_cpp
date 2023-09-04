@@ -14,8 +14,6 @@ set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(INSTALLATION_DIR ${CMAKE_BINARY_DIR}/comlint_cpp)
 set(EXAMPLES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/examples)
 
-add_definitions(-DEXPORT_COMLINT_API=1)
-
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
@@ -40,6 +38,13 @@ if (BUILD_UNIT_TESTS)
     add_subdirectory(libs/googletest)
     add_subdirectory(test)
 endif()
+
+include(GenerateExportHeader)
+generate_export_header(${PROJECT_NAME}
+    BASE_NAME ${PROJECT_NAME}
+    EXPORT_MACRO_NAME PUBLIC_COMLINT_API
+    EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/include/comlint/export_comlint_api.hpp
+)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${INSTALLATION_DIR})
 install(DIRECTORY ${INCLUDE_DIR}/ DESTINATION ${INSTALLATION_DIR}/include/comlint FILES_MATCHING PATTERN "*.hpp")

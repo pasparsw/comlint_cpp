@@ -3,3 +3,4 @@ build
 examples/build
 examples/.vscode
 examples/comlint_cpp
+include/comlint/export_comlint_api.hpp
