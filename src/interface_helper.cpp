@@ -1,8 +1,8 @@
 #include <iomanip>
 #include <sstream>
 
-#include "interface_helper.hpp"
-#include "utils.hpp"
+#include "comlint/interface_helper.hpp"
+#include "comlint/utils.hpp"
 
 namespace comlint {
 

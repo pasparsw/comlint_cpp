@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "parsed_command.hpp"
+#include "comlint/parsed_command.hpp"
 
 namespace comlint {
 

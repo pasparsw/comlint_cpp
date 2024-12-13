@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "parsed_command.hpp"
+#include "comlint/parsed_command.hpp"
 
 using namespace comlint;
 

@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "utils.hpp"
+#include "comlint/utils.hpp"
 
 using namespace comlint;
 

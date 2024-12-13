@@ -1,6 +1,6 @@
 #include <numeric>
 
-#include "utils.hpp"
+#include "comlint/utils.hpp"
 
 namespace comlint {
 namespace utils {

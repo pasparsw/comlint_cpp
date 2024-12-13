@@ -1,6 +1,6 @@
 #include <gmock/gmock.h>
 
-#include "command_handler_interface.hpp"
+#include "comlint/command_handler_interface.hpp"
 
 using namespace comlint;
 

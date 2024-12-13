@@ -1,13 +1,14 @@
 #include <gtest/gtest.h>
 
-#include "interface_helper.hpp"
+#include "comlint/interface_helper.hpp"
 
 using namespace comlint;
 
 TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForNoArgument)
 {
     const unsigned int argc = 1;
-    char* argv[] = {"program.exe"};
+    char program_name[] = "program.exe";
+    char* argv[] = {program_name};
 
     EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv, false));
 }
@@ -15,7 +16,8 @@ TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForNoArgument)
 TEST(TestInterfaceHelper, IsHelpRequiredReturnsFalseForNoArgumentAndAllowedNoArguments)
 {
     const unsigned int argc = 1;
-    char* argv[] = {"program.exe"};
+    char program_name[] = "program.exe";
+    char* argv[] = {program_name};
 
     EXPECT_FALSE(InterfaceHelper::IsHelpRequired(argc, argv, true));
 }
@@ -23,7 +25,9 @@ TEST(TestInterfaceHelper, IsHelpRequiredReturnsFalseForNoArgumentAndAllowedNoArg
 TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpCommand)
 {
     const unsigned int argc = 2;
-    char* argv[] = {"program.exe", "help"};
+    char program_name[] = "program.exe";
+    char help[] = "help";
+    char* argv[] = {program_name, help};
 
     EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv, false));
 }
@@ -31,7 +35,9 @@ TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpCommand)
 TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpOption)
 {
     const unsigned int argc = 2;
-    char* argv[] = {"program.exe", "-h"};
+    char program_name[] = "program.exe";
+    char help_option[] = "-h";
+    char* argv[] = {program_name, help_option};
 
     EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv, false));
 }
@@ -39,7 +45,9 @@ TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpOption)
 TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpFlag)
 {
     const unsigned int argc = 2;
-    char* argv[] = {"program.exe", "--help"};
+    char program_name[] = "program.exe";
+    char help_flag[] = "--help";
+    char* argv[] = {program_name, help_flag};
 
     EXPECT_TRUE(InterfaceHelper::IsHelpRequired(argc, argv, false));
 }
@@ -47,7 +55,9 @@ TEST(TestInterfaceHelper, IsHelpRequiredReturnsTrueForHelpFlag)
 TEST(TestInterfaceHelper, IsHelpRequiredReturnsFalseForOtherArguments)
 {
     const unsigned int argc = 2;
-    char* argv[] = {"program.exe", "some_input"};
+    char program_name[] = "program.exe";
+    char some_input[] = "some_input";
+    char* argv[] = {program_name, some_input};
 
     EXPECT_FALSE(InterfaceHelper::IsHelpRequired(argc, argv, false));
 }

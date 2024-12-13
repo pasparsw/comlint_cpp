@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "types.hpp"
+#include "comlint/types.hpp"
 
 namespace comlint {
 

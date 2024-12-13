@@ -1,24 +1,24 @@
 #include <gtest/gtest.h>
 
-#include "command_line_interface.hpp"
-#include "exceptions/unsupported_command.hpp"
-#include "exceptions/missing_command_value.hpp"
-#include "exceptions/unsupported_command_value.hpp"
-#include "exceptions/unsupported_option.hpp"
-#include "exceptions/missing_option_value.hpp"
-#include "exceptions/forbidden_option.hpp"
-#include "exceptions/forbidden_option_value.hpp"
-#include "exceptions/unsupported_flag.hpp"
-#include "exceptions/forbidden_flag.hpp"
-#include "exceptions/missing_required_option.hpp"
-#include "exceptions/invalid_command_handler.hpp"
-#include "exceptions/missing_command_handler.hpp"
-#include "exceptions/invalid_command_name.hpp"
-#include "exceptions/duplicated_command.hpp"
-#include "exceptions/invalid_option_name.hpp"
-#include "exceptions/duplicated_option.hpp"
-#include "exceptions/invalid_flag_name.hpp"
-#include "exceptions/duplicated_flag.hpp"
+#include "comlint/command_line_interface.hpp"
+#include "comlint/exceptions/unsupported_command.hpp"
+#include "comlint/exceptions/missing_command_value.hpp"
+#include "comlint/exceptions/unsupported_command_value.hpp"
+#include "comlint/exceptions/unsupported_option.hpp"
+#include "comlint/exceptions/missing_option_value.hpp"
+#include "comlint/exceptions/forbidden_option.hpp"
+#include "comlint/exceptions/forbidden_option_value.hpp"
+#include "comlint/exceptions/unsupported_flag.hpp"
+#include "comlint/exceptions/forbidden_flag.hpp"
+#include "comlint/exceptions/missing_required_option.hpp"
+#include "comlint/exceptions/invalid_command_handler.hpp"
+#include "comlint/exceptions/missing_command_handler.hpp"
+#include "comlint/exceptions/invalid_command_name.hpp"
+#include "comlint/exceptions/duplicated_command.hpp"
+#include "comlint/exceptions/invalid_option_name.hpp"
+#include "comlint/exceptions/duplicated_option.hpp"
+#include "comlint/exceptions/invalid_flag_name.hpp"
+#include "comlint/exceptions/duplicated_flag.hpp"
 #include "mock_command_handler.hpp"
 
 using namespace comlint;
@@ -26,7 +26,9 @@ using namespace comlint;
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsUnsupportedCommand)
 {
     const int argc = 2;
-    char* argv[] = {"program.exe", "unsupported_command"};
+    char program_name[] = "program.exe";
+    char unsupported_command[] = "unsupported_command";
+    char* argv[] = {program_name, unsupported_command};
     CommandLineInterface cli(argc, argv);
 
     cli.AddCommand("supported_command", "Some supported command");
@@ -37,7 +39,9 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsUnsupportedCommand)
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingCommandValue)
 {
     const int argc = 2;
-    char* argv[] = {"program.exe", "supported_command"};
+    char program_name[] = "program.exe";
+    char supported_command[] = "supported_command";
+    char* argv[] = {program_name, supported_command};
     CommandLineInterface cli(argc, argv);
 
     const unsigned int num_of_required_values {1U};
@@ -50,7 +54,11 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingCommandValue)
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingCommandValueWhenOptionFollowsCommand)
 {
     const int argc = 4;
-    char* argv[] = {"program.exe", "supported_command", "-option", "option_value"};
+    char program_name[] = "program.exe";
+    char supported_command[] = "supported_command";
+    char option[] = "-option";
+    char option_value[] = "option_value";
+    char* argv[] = {program_name, supported_command, option, option_value};
     CommandLineInterface cli(argc, argv);
 
     const unsigned int num_of_required_values {1U};
@@ -64,7 +72,10 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingCommandValueWhenOp
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingCommandValueWhenFlagFollowsCommand)
 {
     const int argc = 3;
-    char* argv[] = {"program.exe", "supported_command", "--flag"};
+    char program_name[] = "program.exe";
+    char supported_command[] = "supported_command";
+    char flag[] = "--flag";
+    char* argv[] = {program_name, supported_command, flag};
     CommandLineInterface cli(argc, argv);
 
     const unsigned int num_of_required_values {1U};
@@ -78,7 +89,10 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingCommandValueWhenFl
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsUnsupportedCommandValue)
 {
     const int argc = 3;
-    char* argv[] = {"program.exe", "supported_command", "unsupported_value"};
+    char program_name[] = "program.exe";
+    char supported_command[] = "supported_command";
+    char unsupported_value[] = "unsupported_value";
+    char* argv[] = {program_name, supported_command, unsupported_value};
     CommandLineInterface cli(argc, argv);
 
     const CommandValues allowed_values {"supported_value"};
@@ -92,7 +106,10 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsUnsupportedCommandValue)
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsUnsupportedOption)
 {
     const int argc = 3;
-    char* argv[] = {"program.exe", "supported_command", "-unsupported_option"};
+    char program_name[] = "program.exe";
+    char supported_command[] = "supported_command";
+    char unsupported_option[] = "-unsupported_option";
+    char* argv[] = {program_name, supported_command, unsupported_option};
     CommandLineInterface cli(argc, argv);
 
     cli.AddCommand("supported_command", "Some supported command");
@@ -103,7 +120,11 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsUnsupportedOption)
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingRequiredOption)
 {
     const int argc = 4;
-    char* argv[] = {"program.exe", "supported_command", "-allowed_option", "some_value"};
+    char program_name[] = "program.exe";
+    char supported_command[] = "supported_command";
+    char allowed_option[] = "-allowed_option";
+    char some_value[] = "some_value";
+    char* argv[] = {program_name, supported_command, allowed_option, some_value};
     CommandLineInterface cli(argc, argv);
     const OptionNames allowed_options {"-allowed_option", "-required_option"};
     const FlagNames allowed_flags = NONE;
@@ -120,7 +141,10 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingRequiredOption)
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingOptionValue)
 {
     const int argc = 3;
-    char* argv[] = {"program.exe", "command", "-option_name"};
+    char program_name[] = "program.exe";
+    char command[] = "command";
+    char option_name[] = "-option_name";
+    char* argv[] = {program_name, command, option_name};
     CommandLineInterface cli(argc, argv);
 
     cli.AddCommand("command", "Some command");
@@ -132,7 +156,11 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsMissingOptionValue)
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenOption)
 {
     const int argc = 4;
-    char* argv[] = {"program.exe", "command_2", "-option_1", "option_value"};
+    char program_name[] = "program.exe";
+    char command[] = "command_2";
+    char option_name[] = "-option_1";
+    char option_value[] = "option_value";
+    char* argv[] = {program_name, command, option_name, option_value};
     CommandLineInterface cli(argc, argv);
 
     const OptionNames command_1_allowed_options {"-option_1"};
@@ -148,7 +176,11 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenOption)
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenOptionForSpecifiedAllowedOptions)
 {
     const int argc = 4;
-    char* argv[] = {"program.exe", "command_1", "-option_2", "option_value"};
+    char program_name[] = "program.exe";
+    char command[] = "command_1";
+    char option_name[] = "-option_2";
+    char option_value[] = "option_value";
+    char* argv[] = {program_name, command, option_name, option_value};
     CommandLineInterface cli(argc, argv);
 
     const OptionNames command_1_allowed_options {"-option_1"};
@@ -166,7 +198,11 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenOptionForSpecifi
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenOptionValue)
 {
     const int argc = 4;
-    char* argv[] = {"program.exe", "command", "-option", "forbidden_option_value"};
+    char program_name[] = "program.exe";
+    char command[] = "command";
+    char option_name[] = "-option";
+    char option_value[] = "forbidden_option_value";
+    char* argv[] = {program_name, command, option_name, option_value};
     CommandLineInterface cli(argc, argv);
 
     const OptionNames command_allowed_options {"-option"};
@@ -182,7 +218,10 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenOptionValue)
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsUnsupportedFlag)
 {
     const int argc = 3;
-    char* argv[] = {"program.exe", "command", "--unsupported_flag"};
+    char program_name[] = "program.exe";
+    char command[] = "command";
+    char flag[] = "--unsupported_flag";
+    char* argv[] = {program_name, command, flag};
     CommandLineInterface cli(argc, argv);
 
     cli.AddCommand("command", "Some command");
@@ -193,7 +232,10 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsUnsupportedFlag)
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenFlag)
 {
     const int argc = 3;
-    char* argv[] = {"program.exe", "command", "--flag_1"};
+    char program_name[] = "program.exe";
+    char command[] = "command";
+    char flag[] = "--flag_1";
+    char* argv[] = {program_name, command, flag};
     CommandLineInterface cli(argc, argv);
 
     cli.AddCommand("command", "Some command");
@@ -205,7 +247,10 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenFlag)
 TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenFlagForSpecifiedAllowedFlags)
 {
     const int argc = 3;
-    char* argv[] = {"program.exe", "command", "--flag_2"};
+    char program_name[] = "program.exe";
+    char command[] = "command";
+    char flag[] = "--flag_2";
+    char* argv[] = {program_name, command, flag};
     CommandLineInterface cli(argc, argv);
 
     const OptionNames allowed_options = NONE;
@@ -222,7 +267,8 @@ TEST(TestCommandLineInterfaceNegativeCases, ParseThrowsForbiddenFlagForSpecified
 TEST(TestCommandLineInterfaceNegativeCases, AddCommandHandlerThrowsUnsupportedCommand)
 {
     const int argc = 1;
-    char* argv[] = {"program.exe"};
+    char program_name[] = "program.exe";
+    char* argv[] = {program_name};
     CommandLineInterface cli(argc, argv);
 
     cli.AddCommand("command", "Some command");
@@ -233,7 +279,8 @@ TEST(TestCommandLineInterfaceNegativeCases, AddCommandHandlerThrowsUnsupportedCo
 TEST(TestCommandLineInterfaceNegativeCases, AddCommandHandlerThrowsInvalidCommandHandler)
 {
     const int argc = 1;
-    char* argv[] = {"program.exe"};
+    char program_name[] = "program.exe";
+    char* argv[] = {program_name};
     CommandLineInterface cli(argc, argv);
 
     cli.AddCommand("command", "Some command");
@@ -244,7 +291,9 @@ TEST(TestCommandLineInterfaceNegativeCases, AddCommandHandlerThrowsInvalidComman
 TEST(TestCommandLineInterfaceNegativeCases, AddCommandHandlerThrowsMissingCommandHandler)
 {
     const int argc = 2;
-    char* argv[] = {"program.exe", "command_2"};
+    char program_name[] = "program.exe";
+    char command[] = "command_2";
+    char* argv[] = {program_name, command};
     CommandLineInterface cli(argc, argv);
 
     cli.AddCommand("command_1", "Some command 1");
@@ -260,7 +309,8 @@ TEST(TestCommandLineInterfaceNegativeCases, AddCommandHandlerThrowsMissingComman
 TEST(TestCommandLineInterfaceNegativeCases, AddCommandThrowsInvalidCommandName)
 {
     const int argc = 2;
-    char* argv[] = {"program.exe"};
+    char program_name[] = "program.exe";
+    char* argv[] = {program_name};
     CommandLineInterface cli(argc, argv);
 
     EXPECT_THROW(cli.AddCommand("-command", "Some command"), InvalidCommandName);
@@ -269,7 +319,8 @@ TEST(TestCommandLineInterfaceNegativeCases, AddCommandThrowsInvalidCommandName)
 TEST(TestCommandLineInterfaceNegativeCases, AddCommandThrowsDuplicatedCommand)
 {
     const int argc = 2;
-    char* argv[] = {"program.exe"};
+    char program_name[] = "program.exe";
+    char* argv[] = {program_name};
     CommandLineInterface cli(argc, argv);
 
     cli.AddCommand("command", "Some command");
@@ -280,7 +331,8 @@ TEST(TestCommandLineInterfaceNegativeCases, AddCommandThrowsDuplicatedCommand)
 TEST(TestCommandLineInterfaceNegativeCases, AddOptionThrowsInvalidOptionName)
 {
     const int argc = 2;
-    char* argv[] = {"program.exe"};
+    char program_name[] = "program.exe";
+    char* argv[] = {program_name};
     CommandLineInterface cli(argc, argv);
 
     EXPECT_THROW(cli.AddOption("option", "Some option"), InvalidOptionName);
@@ -289,7 +341,8 @@ TEST(TestCommandLineInterfaceNegativeCases, AddOptionThrowsInvalidOptionName)
 TEST(TestCommandLineInterfaceNegativeCases, AddOptionThrowsDuplicatedOption)
 {
     const int argc = 2;
-    char* argv[] = {"program.exe"};
+    char program_name[] = "program.exe";
+    char* argv[] = {program_name};
     CommandLineInterface cli(argc, argv);
 
     cli.AddOption("-option", "Some option");
@@ -300,7 +353,8 @@ TEST(TestCommandLineInterfaceNegativeCases, AddOptionThrowsDuplicatedOption)
 TEST(TestCommandLineInterfaceNegativeCases, AddFlagThrowsInvalidFlagName)
 {
     const int argc = 2;
-    char* argv[] = {"program.exe"};
+    char program_name[] = "program.exe";
+    char* argv[] = {program_name};
     CommandLineInterface cli(argc, argv);
 
     EXPECT_THROW(cli.AddFlag("flag", "Some flag"), InvalidFlagName);
@@ -309,7 +363,8 @@ TEST(TestCommandLineInterfaceNegativeCases, AddFlagThrowsInvalidFlagName)
 TEST(TestCommandLineInterfaceNegativeCases, AddFlagThrowsDuplicatedFlag)
 {
     const int argc = 2;
-    char* argv[] = {"program.exe"};
+    char program_name[] = "program.exe";
+    char* argv[] = {program_name};
     CommandLineInterface cli(argc, argv);
 
     cli.AddFlag("--flag", "Some flag");

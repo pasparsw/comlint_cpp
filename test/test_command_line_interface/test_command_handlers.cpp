@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "command_line_interface.hpp"
+#include "comlint/command_line_interface.hpp"
 #include "mock_command_handler.hpp"
 
 using namespace comlint;
@@ -10,7 +10,9 @@ TEST(TestCommandLineInterfaceCommandHandlers, ProperCommandHandlerIsRan)
     using ::testing::_;
 
     const int argc = 2;
-    char* argv[] = {"program.exe", "command_2"};
+    char program_name[] = "program.exe";
+    char command[] = "command_2";
+    char* argv[] = {program_name, command};
     CommandLineInterface cli(argc, argv);
 
     std::shared_ptr<MockCommandHandler> command_1_handler = std::make_shared<MockCommandHandler>();
@@ -33,8 +35,18 @@ TEST(TestCommandLineInterfaceCommandHandlers, ProperCommandHandlerIsRan)
 TEST(TestCommandLineInterfaceCommandHandlers, ProperCommandHandlerIsRanWithProperArguments)
 {
     const int argc = 10;
-    char* argv[] = {"program.exe", "command_2", "value_1", "value_2", "-option_1", "option_value_1",
-                    "-option_2", "option_value_2", "--flag_1", "--flag_2"};
+    char program_name[] = "program.exe";
+    char command[] = "command_2";
+    char value_1[] = "value_1";
+    char value_2[] = "value_2";
+    char option_1[] = "-option_1";
+    char option_1_value[] = "option_value_1";
+    char option_2[] = "-option_2";
+    char option_2_value[] = "option_value_2";
+    char flag_1[] = "--flag_1";
+    char flag_2[] = "--flag_2";
+    char* argv[] = {program_name, command, value_1, value_2, option_1, option_1_value,
+                    option_2, option_2_value, flag_1, flag_2};
     CommandLineInterface cli(argc, argv);
 
     std::shared_ptr<MockCommandHandler> command_1_handler = std::make_shared<MockCommandHandler>();
