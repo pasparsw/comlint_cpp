@@ -1,13 +1,15 @@
 #include <gtest/gtest.h>
 
-#include "command_line_interface.hpp"
+#include "comlint/command_line_interface.hpp"
 
 using namespace comlint;
 
 TEST(TestCommandLineInterfaceNonValueCommands, CommandWithDefaultProperties)
 {
     const int argc = 2;
-    char* argv[] = {"program.exe", "open"};
+    char program_name[] = "program.exe";
+    char open[] = "open";
+    char* argv[] = {program_name, open};
     CommandLineInterface cli(argc, argv);
     const ParsedCommand expected_parsed_command("open", {}, {}, {});
 
@@ -21,7 +23,9 @@ TEST(TestCommandLineInterfaceNonValueCommands, CommandWithDefaultProperties)
 TEST(TestCommandLineInterfaceNonValueCommands, CommandWithOneAllowedOption)
 {
     const int argc = 2;
-    char* argv[] = {"program.exe", "open"};
+    char program_name[] = "program.exe";
+    char open[] = "open";
+    char* argv[] = {program_name, open};
 
     const CommandName expected_command_name {"open"};
     const CommandValues expected_command_values {};
@@ -42,7 +46,9 @@ TEST(TestCommandLineInterfaceNonValueCommands, CommandWithOneAllowedOption)
 TEST(TestCommandLineInterfaceNonValueCommands, CommandWithCoupleAllowedOptionsAndFlags)
 {
     const int argc = 2;
-    char* argv[] = {"program.exe", "open"};
+    char program_name[] = "program.exe";
+    char open[] = "open";
+    char* argv[] = {program_name, open};
 
     const CommandName expected_command_name {"open"};
     const CommandValues expected_command_values {};
@@ -64,7 +70,11 @@ TEST(TestCommandLineInterfaceNonValueCommands, CommandWithCoupleAllowedOptionsAn
 TEST(TestCommandLineInterfaceNonValueCommands, CommandWithOneRequiredOption)
 {
     const int argc = 4;
-    char* argv[] = {"program.exe", "open", "-required_option", "required_option_value"};
+    char program_name[] = "program.exe";
+    char open[] = "open";
+    char required_option[] = "-required_option";
+    char required_option_value[] = "required_option_value";
+    char* argv[] = {program_name, open, required_option, required_option_value};
 
     const CommandName expected_command_name {"open"};
     const CommandValues expected_command_values {};
@@ -88,7 +98,15 @@ TEST(TestCommandLineInterfaceNonValueCommands, CommandWithOneRequiredOption)
 TEST(TestCommandLineInterfaceNonValueCommands, Combo)
 {
     const int argc = 8;
-    char* argv[] = {"program.exe", "open", "-a", "12", "-c", "some_string", "--flag_1", "--flag_2"};
+    char program_name[] = "program.exe";
+    char open[] = "open";
+    char option_a[] = "-a";
+    char option_a_value[] = "12";
+    char option_c[] = "-c";
+    char option_c_value[] = "some_string";
+    char flag_1[] = "--flag_1";
+    char flag_2[] = "--flag_2";
+    char* argv[] = {program_name, open, option_a, option_a_value, option_c, option_c_value, flag_1, flag_2};
 
     const CommandName expected_command_name {"open"};
     const CommandValues expected_command_values {};

@@ -1,13 +1,17 @@
 #include <gtest/gtest.h>
 
-#include "command_line_interface.hpp"
+#include "comlint/command_line_interface.hpp"
 
 using namespace comlint;
 
 TEST(TestCommandLineInterfaceMultipleValuesCommands, CommandAcceptingAnyTwoValues)
 {
     const int argc = 4;
-    char* argv[] = {"program.exe", "copy", "/dst/from", "/dst/to"};
+    char program_name[] = "program.exe";
+    char copy[] = "copy";
+    char from[] = "/dst/from";
+    char to[] = "/dst/to";
+    char* argv[] = {program_name, copy, from, to};
     const ParsedCommand expected_parsed_command("copy", {"/dst/from", "/dst/to"}, {}, {});
 
     CommandLineInterface cli(argc, argv);
@@ -23,7 +27,11 @@ TEST(TestCommandLineInterfaceMultipleValuesCommands, CommandAcceptingAnyTwoValue
 TEST(TestCommandLineInterfaceMultipleValuesCommands, CommandAcceptingPredefinedTwoValues)
 {
     const int argc = 4;
-    char* argv[] = {"program.exe", "list_files", "txt", "pdf"};
+    char program_name[] = "program.exe";
+    char list_files[] = "list_files";
+    char txt[] = "txt";
+    char pdf[] = "pdf";
+    char* argv[] = {program_name, list_files, txt, pdf};
     const ParsedCommand expected_parsed_command("list_files", {"txt", "pdf"}, {}, {});
 
     CommandLineInterface cli(argc, argv);

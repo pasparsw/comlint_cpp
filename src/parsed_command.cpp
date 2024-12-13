@@ -1,5 +1,5 @@
-#include "parsed_command.hpp"
-#include "utils.hpp"
+#include "comlint/parsed_command.hpp"
+#include "comlint/utils.hpp"
 
 namespace comlint {
 

@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "types.hpp"
-#include "command_handler_interface.hpp"
+#include "comlint/types.hpp"
+#include "comlint/command_handler_interface.hpp"
 
 namespace comlint {
 

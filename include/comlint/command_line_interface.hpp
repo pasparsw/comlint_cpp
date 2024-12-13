@@ -32,11 +32,11 @@
 
 #include <functional>
 
-#include "export_comlint_api.hpp"
-#include "interface_validator.hpp"
-#include "parsed_command.hpp"
-#include "command_line_element_type.hpp"
-#include "interface_helper.hpp"
+#include "comlint/export_comlint_api.hpp"
+#include "comlint/interface_validator.hpp"
+#include "comlint/parsed_command.hpp"
+#include "comlint/command_line_element_type.hpp"
+#include "comlint/interface_helper.hpp"
 
 namespace comlint {
 

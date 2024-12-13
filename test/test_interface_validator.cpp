@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <interface_validator.hpp>
+#include "comlint/interface_validator.hpp"
 
 TEST(TestInterfaceValidator, IsCommandNameValidReturnsTrueForSingleCharacterCommandName) {
   EXPECT_TRUE(comlint::InterfaceValidator::IsCommandNameValid("a"));

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "command_properties.hpp"
+#include "comlint/command_properties.hpp"
 
 using namespace comlint;
 

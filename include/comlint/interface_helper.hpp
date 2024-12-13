@@ -3,10 +3,10 @@
 #include <string>
 #include <map>
 
-#include "types.hpp"
-#include "command_properties.hpp"
-#include "option_properties.hpp"
-#include "flag_properties.hpp"
+#include "comlint/types.hpp"
+#include "comlint/command_properties.hpp"
+#include "comlint/option_properties.hpp"
+#include "comlint/flag_properties.hpp"
 
 namespace comlint {
 

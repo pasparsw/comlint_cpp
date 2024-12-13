@@ -1,13 +1,16 @@
 #include <gtest/gtest.h>
 
-#include "command_line_interface.hpp"
+#include "comlint/command_line_interface.hpp"
 
 using namespace comlint;
 
 TEST(TestCommandLineInterfaceSingleValueCommands, CommandAcceptingAnyValue)
 {
     const int argc = 3;
-    char* argv[] = {"program.exe", "open", "/some/file.txt"};
+    char program_name[] = "program.exe";
+    char open[] = "open";
+    char path[] = "/some/file.txt";
+    char* argv[] = {program_name, open, path};
     const ParsedCommand expected_parsed_command("open", {"/some/file.txt"}, {}, {});
 
     CommandLineInterface cli(argc, argv);
@@ -23,7 +26,10 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandAcceptingAnyValue)
 TEST(TestCommandLineInterfaceSingleValueCommands, CommandAceptingPredefinedValues)
 {
     const int argc = 3;
-    char* argv[] = {"program.exe", "open", "file"};
+    char program_name[] = "program.exe";
+    char open[] = "open";
+    char file[] = "file";
+    char* argv[] = {program_name, open, file};
     const ParsedCommand expected_parsed_command("open", {"file"}, {}, {});
 
     CommandLineInterface cli(argc, argv);
@@ -40,7 +46,10 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandAceptingPredefinedValue
 TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithOneAllowedOption)
 {
     const int argc = 3;
-    char* argv[] = {"program.exe", "open", "/some/file.txt"};
+    char program_name[] = "program.exe";
+    char open[] = "open";
+    char path[] = "/some/file.txt";
+    char* argv[] = {program_name, open, path};
 
     const CommandName expected_command_name {"open"};
     const CommandValues expected_command_values {"/some/file.txt"};
@@ -63,7 +72,10 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithOneAllowedOption)
 TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithCoupleAllowedOptionsAndFlags)
 {
     const int argc = 3;
-    char* argv[] = {"program.exe", "open", "/some/file.txt"};
+    char program_name[] = "program.exe";
+    char open[] = "open";
+    char path[] = "/some/file.txt";
+    char* argv[] = {program_name, open, path};
 
     const CommandName expected_command_name {"open"};
     const CommandValues expected_command_values {"/some/file.txt"};
@@ -87,7 +99,12 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithCoupleAllowedOption
 TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithOneRequiredOption)
 {
     const int argc = 5;
-    char* argv[] = {"program.exe", "open", "/some/file.txt", "-required_option", "required_option_value"};
+    char program_name[] = "program.exe";
+    char open[] = "open";
+    char path[] = "/some/file.txt";
+    char required_option[] = "-required_option";
+    char required_option_value[] = "required_option_value";
+    char* argv[] = {program_name, open, path, required_option, required_option_value};
 
     const CommandName expected_command_name {"open"};
     const CommandValues expected_command_values {"/some/file.txt"};
@@ -113,7 +130,16 @@ TEST(TestCommandLineInterfaceSingleValueCommands, CommandWithOneRequiredOption)
 TEST(TestCommandLineInterfaceSingleValueCommands, Combo)
 {
     const int argc = 9;
-    char* argv[] = {"program.exe", "open", "/some/file.txt", "-a", "12", "-c", "some_string", "--flag_1", "--flag_2"};
+    char program_name[] = "program.exe";
+    char open[] = "open";
+    char path[] = "/some/file.txt";
+    char option_a[] = "-a";
+    char option_a_value[] = "12";
+    char option_c[] = "-c";
+    char option_c_value[] = "some_string";
+    char flag_1[] = "--flag_1";
+    char flag_2[] = "--flag_2";
+    char* argv[] = {program_name, open, path, option_a, option_a_value, option_c, option_c_value, flag_1, flag_2};
 
     const CommandName expected_command_name {"open"};
     const CommandValues expected_command_values {"/some/file.txt"};

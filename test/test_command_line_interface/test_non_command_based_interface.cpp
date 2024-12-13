@@ -1,13 +1,16 @@
 #include <gtest/gtest.h>
 
-#include "command_line_interface.hpp"
+#include "comlint/command_line_interface.hpp"
 
 using namespace comlint;
 
 TEST(TestNonCommandBasedInterface, InterfaceWithASingleOption)
 {
     const int argc = 3;
-    char* argv[] = {"program.exe", "-option", "option_value"};
+    char program_name[] = "program.exe";
+    char option_name[] = "-option";
+    char option_value[] = "option_value";
+    char* argv[] = {program_name, option_name, option_value};
 
     const CommandName expected_command_name {""};
     const CommandValues expected_command_values {};
@@ -27,7 +30,10 @@ TEST(TestNonCommandBasedInterface, InterfaceWithASingleOption)
 TEST(TestNonCommandBasedInterface, InterfaceWithASingleOptionAndPredefinedOptionValues)
 {
     const int argc = 3;
-    char* argv[] = {"program.exe", "-option", "option_value_2"};
+    char program_name[] = "program.exe";
+    char option_name[] = "-option";
+    char option_value[] = "option_value_2";
+    char* argv[] = {program_name, option_name, option_value};
 
     const CommandName expected_command_name {""};
     const CommandValues expected_command_values {};
@@ -48,7 +54,9 @@ TEST(TestNonCommandBasedInterface, InterfaceWithASingleOptionAndPredefinedOption
 TEST(TestNonCommandBasedInterface, InterfaceWithASingleFlag)
 {
     const int argc = 2;
-    char* argv[] = {"program.exe", "--flag"};
+    char program_name[] = "program.exe";
+    char flag[] = "--flag";
+    char* argv[] = {program_name, flag};
 
     const CommandName expected_command_name {""};
     const CommandValues expected_command_values {};
@@ -68,7 +76,14 @@ TEST(TestNonCommandBasedInterface, InterfaceWithASingleFlag)
 TEST(TestNonCommandBasedInterface, Combo)
 {
     const int argc = 7;
-    char* argv[] = {"program.exe", "-option_1", "option_value_1", "-option_2", "option_value_2", "--flag_1", "--flag_2"};
+    char program_name[] = "program.exe";
+    char option_1[] = "-option_1";
+    char option_1_value[] = "option_value_1";
+    char option_2[] = "-option_2";
+    char option_2_value[] = "option_value_2";
+    char flag_1[] = "--flag_1";
+    char flag_2[] = "--flag_2";
+    char* argv[] = {program_name, option_1, option_1_value, option_2, option_2_value, flag_1, flag_2};
 
     const CommandName expected_command_name {""};
     const CommandValues expected_command_values {};
