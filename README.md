@@ -7,7 +7,12 @@ Table of contents:
 [What is it?](#what_is_it)<br>
 [How to build and install](#how_to_build_and_install)<br>
 &emsp;[How to build comlint_cpp repository](#how_to_build_comlint_cpp_repository)<br>
-&emsp;[How to embed Comlint into your project](#how_to_embed_comlint_into_your_project)<br>
+&emsp;[How to include Comlint into your project - from source](#how_to_include_comlint_into_your_project_from_source)<br>
+&emsp;&emsp;[Using FetchContent](#from_source_using_fetch_content)<br>
+&emsp;&emsp;[Using sub-directory](#from_source_using_sub_directory)<br>
+&emsp;[How to include Comlint into your project - from release package](#how_to_include_comlint_into_your_project_from_release_package)<br>
+&emsp;&emsp;[Using FetchContent](#from_release_package_using_fetch_content)<br>
+&emsp;&emsp;[Using find_library](#from_release_package_using_find_library)<br>
 &emsp;[How to use Comlint release package](#how_to_use_comlint_release_package)<br>
 [Conventions used](#conventions_used)<br>
 [How to use](#how_to_use)<br>
@@ -48,26 +53,41 @@ cmake --build .
 cmake --install .
 ```
 
-### <a name="how_to_embed_comlint_into_your_project"></a>How to embed Comlint into your project
-Embedding Comlint into your project is very easy and (assuming that comlint is in root of your project) the minimum CMakeLists.txt file that you need is:
+### <a name="how_to_include_comlint_into_your_project_from_source"></a>How to include Comlint into your project - from source
 
+You have 2 options if you want to build ComlintCpp in your project from source.
+
+#### <a name="from_source_using_fetch_content"></a>Using FetchContent
+
+```cmake
+cmake_minimum_required(VERSION 3.28)
+project(ExampleComlintApp)
+include(FetchContent)
+
+FetchContent_Declare(
+    ComlintCpp
+    GIT_REPOSITORY https://github.com/pasparsw/comlint_cpp
+    GIT_TAG v0.3
+)
+FetchContent_MakeAvailable(ComlintCpp)
+
+add_executable(${PROJECT_NAME} main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    ComlintCpp
+)
 ```
-cmake_minimum_required(VERSION 3.10)
 
+#### <a name="from_source_using_sub_directory"></a>Using sub-directory
+
+Assuming that comlint is in root of your project, the minimum CMakeLists.txt file that you need is:
+
+```cmake
+cmake_minimum_required(VERSION 3.28)
 project(ExampleComlintApp)
 
 add_subdirectory(comlint_cpp)
 
-add_executable(${PROJECT_NAME})
-
-target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/comlint_cpp/include
-)
-
-target_sources(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/main.cpp
-)
-
+add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ComlintCpp
 )
@@ -75,28 +95,41 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 After that you can start using comlint in main.cpp file.
 
-### <a name="how_to_use_comlint_release_package"></a>How to use Comlint release package
+### <a name="how_to_include_comlint_into_your_project_from_release_package"></a>How to include Comlint into your project - from release package
 
-* Download .zip package from one of the Comlint releases on github
-* In the archive you will find folder comlint_cpp - extract it
-* Inside the comlint_cpp folder you will find ComlintCpp.dll library and public headers
-* Asuming that you put that folder in the root of your project, the minimum required CMakeLists.txt file is:
+#### <a name="from_release_package_using_fetch_content"></a>Using FetchContent
 
-```
-cmake_minimum_required(VERSION 3.10)
-
+```cmake
+cmake_minimum_required(VERSION 3.28)
 project(ExampleComlintApp)
+include(FetchContent)
 
+FetchContent_Declare(
+    ComlintCpp
+    URL https://github.com/pasparsw/comlint_cpp/releases/download/v0.3/comlint_cpp_v0.3.tar.gz
+)
+FetchContent_MakeAvailable(ComlintCpp)
+
+add_executable(${PROJECT_NAME} main.cpp)
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${comlintcpp_SOURCE_DIR}/include
+)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    ${comlintcpp_SOURCE_DIR}/libComlintCpp.so
+)
+```
+
+#### <a name="from_release_package_using_find_library"></a>Using find_library
+
+```cmake
+cmake_minimum_required(VERSION 3.10)
+project(ExampleComlintApp)
 set(COMLINT_CPP_DIR ${CMAKE_SOURCE_DIR}/comlint_cpp)
 
-add_executable(${PROJECT_NAME})
+add_executable(${PROJECT_NAME} main.cpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${COMLINT_CPP_DIR}/include
-)
-
-target_sources(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/main.cpp
 )
 
 find_library(COMLINT_CPP_LIB NAMES ComlintCpp HINTS ${COMLINT_CPP_DIR})
@@ -105,7 +138,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     ${COMLINT_CPP_LIB}
 )
 ```
-After that you can start using comlint in main.cpp file.
 
 ## <a name="conventions_used"></a>Conventions used
 
